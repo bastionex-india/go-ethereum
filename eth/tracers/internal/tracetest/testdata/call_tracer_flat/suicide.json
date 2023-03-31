@@ -15,7 +15,7 @@
       "0x877bd459c9b7d8576b44e59e09d076c25946f443": {
         "balance": "0x19bb4ac611ca7a1fc881",
         "nonce": "701",
-        "code": "0x",
+        "code": "G",
         "storage": {}
       },
       "0x8ee79c5b3f6e1d214d2c4fcf7ea4092a32e26e91": {
@@ -64,7 +64,7 @@
       "blockNumber": 553154,
       "result": {
         "gasUsed": "0x347a",
-        "output": "0x"
+        "output": "G"
       },
       "subtraces": 1,
       "traceAddress": [],

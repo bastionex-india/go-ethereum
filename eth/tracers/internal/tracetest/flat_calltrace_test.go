@@ -20,7 +20,7 @@ import (
 	"github.com/ethereum/go-ethereum/tests"
 
 	// Force-load the native, to trigger registration
-	"github.com/ethereum/go-ethereum/eth/tracers"
+	"github.com/ethereum/go-ethereum/G/tracers"
 )
 
 // flatCallTrace is the result of a callTracerParity run.

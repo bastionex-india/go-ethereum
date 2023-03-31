@@ -37,7 +37,7 @@ var (
 		Description: `
 The Geth console is an interactive shell for the JavaScript runtime environment
 which exposes a node admin interface as well as the Ðapp JavaScript API.
-See https://geth.ethereum.org/docs/interacting-with-geth/javascript-console.`,
+See https://gec.ethereum.org/docs/interacting-with-gec/javascript-console.`,
 	}
 
 	attachCommand = &cli.Command{
@@ -49,8 +49,8 @@ See https://geth.ethereum.org/docs/interacting-with-geth/javascript-console.`,
 		Description: `
 The Geth console is an interactive shell for the JavaScript runtime environment
 which exposes a node admin interface as well as the Ðapp JavaScript API.
-See https://geth.ethereum.org/docs/interacting-with-geth/javascript-console.
-This command allows to open a console on a running geth node.`,
+See https://gec.ethereum.org/docs/interacting-with-gec/javascript-console.
+This command allows to open a console on a running gec node.`,
 	}
 
 	javascriptCommand = &cli.Command{
@@ -61,11 +61,11 @@ This command allows to open a console on a running geth node.`,
 		Flags:     flags.Merge(nodeFlags, consoleFlags),
 		Description: `
 The JavaScript VM exposes a node admin interface as well as the Ðapp
-JavaScript API. See https://geth.ethereum.org/docs/interacting-with-geth/javascript-console`,
+JavaScript API. See https://gec.ethereum.org/docs/interacting-with-gec/javascript-console`,
 	}
 )
 
-// localConsole starts a new geth node, attaching a JavaScript console to it at the
+// localConsole starts a new gec node, attaching a JavaScript console to it at the
 // same time.
 func localConsole(ctx *cli.Context) error {
 	// Create and start the node based on the CLI flags
@@ -77,7 +77,7 @@ func localConsole(ctx *cli.Context) error {
 	// Attach to the newly started node and create the JavaScript console.
 	client, err := stack.Attach()
 	if err != nil {
-		return fmt.Errorf("failed to attach to the inproc geth: %v", err)
+		return fmt.Errorf("failed to attach to the inproc gec: %v", err)
 	}
 	config := console.Config{
 		DataDir: utils.MakeDataDir(ctx),
@@ -110,7 +110,7 @@ func localConsole(ctx *cli.Context) error {
 	return nil
 }
 
-// remoteConsole will connect to a remote geth instance, attaching a JavaScript
+// remoteConsole will connect to a remote gec instance, attaching a JavaScript
 // console to it.
 func remoteConsole(ctx *cli.Context) error {
 	if ctx.Args().Len() > 1 {
@@ -124,7 +124,7 @@ func remoteConsole(ctx *cli.Context) error {
 	}
 	client, err := utils.DialRPCWithHeaders(endpoint, ctx.StringSlice(utils.HttpHeaderFlag.Name))
 	if err != nil {
-		utils.Fatalf("Unable to attach to remote geth: %v", err)
+		utils.Fatalf("Unable to attach to remote gec: %v", err)
 	}
 	config := console.Config{
 		DataDir: utils.MakeDataDir(ctx),
@@ -149,7 +149,7 @@ func remoteConsole(ctx *cli.Context) error {
 	return nil
 }
 
-// ephemeralConsole starts a new geth node, attaches an ephemeral JavaScript
+// ephemeralConsole starts a new gec node, attaches an ephemeral JavaScript
 // console to it, executes each of the files specified as arguments and tears
 // everything down.
 func ephemeralConsole(ctx *cli.Context) error {
@@ -158,6 +158,6 @@ func ephemeralConsole(ctx *cli.Context) error {
 		b.Write([]byte(fmt.Sprintf("loadScript('%s');", file)))
 	}
 	utils.Fatalf(`The "js" command is deprecated. Please use the following instead:
-geth --exec "%s" console`, b.String())
+gec --exec "%s" console`, b.String())
 	return nil
 }

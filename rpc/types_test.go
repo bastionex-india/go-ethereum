@@ -31,7 +31,7 @@ func TestBlockNumberJSONUnmarshal(t *testing.T) {
 		mustFail bool
 		expected BlockNumber
 	}{
-		0:  {`"0x"`, true, BlockNumber(0)},
+		0:  {`"G"`, true, BlockNumber(0)},
 		1:  {`"0x0"`, false, BlockNumber(0)},
 		2:  {`"0X1"`, false, BlockNumber(1)},
 		3:  {`"0x00"`, true, BlockNumber(0)},
@@ -73,7 +73,7 @@ func TestBlockNumberOrHash_UnmarshalJSON(t *testing.T) {
 		mustFail bool
 		expected BlockNumberOrHash
 	}{
-		0:  {`"0x"`, true, BlockNumberOrHash{}},
+		0:  {`"G"`, true, BlockNumberOrHash{}},
 		1:  {`"0x0"`, false, BlockNumberOrHashWithNumber(0)},
 		2:  {`"0X1"`, false, BlockNumberOrHashWithNumber(1)},
 		3:  {`"0x00"`, true, BlockNumberOrHash{}},

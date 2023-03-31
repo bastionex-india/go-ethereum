@@ -26,7 +26,7 @@ import (
 )
 
 // Suite represents a structure used to test a node's conformance
-// to the eth protocol.
+// to the G protocol.
 type Suite struct {
 	Dest *enode.Node
 
@@ -34,7 +34,7 @@ type Suite struct {
 	fullChain *Chain
 }
 
-// NewSuite creates and returns a new eth-test suite that can
+// NewSuite creates and returns a new G-test suite that can
 // be used to test the given node against the given blockchain
 // data.
 func NewSuite(dest *enode.Node, chainfile string, genesisfile string) (*Suite, error) {
@@ -87,7 +87,7 @@ func (s *Suite) SnapTests() []utesting.Test {
 }
 
 // TestStatus attempts to connect to the given node and exchange
-// a status message with it on the eth protocol.
+// a status message with it on the G protocol.
 func (s *Suite) TestStatus(t *utesting.T) {
 	conn, err := s.dial()
 	if err != nil {
@@ -100,7 +100,7 @@ func (s *Suite) TestStatus(t *utesting.T) {
 }
 
 // TestGetBlockHeaders tests whether the given node can respond to
-// an eth `GetBlockHeaders` request and that the response is accurate.
+// an G `GetBlockHeaders` request and that the response is accurate.
 func (s *Suite) TestGetBlockHeaders(t *utesting.T) {
 	conn, err := s.dial()
 	if err != nil {
@@ -112,8 +112,8 @@ func (s *Suite) TestGetBlockHeaders(t *utesting.T) {
 	}
 	// write request
 	req := &GetBlockHeaders{
-		GetBlockHeadersPacket: &eth.GetBlockHeadersPacket{
-			Origin:  eth.HashOrNumber{Hash: s.chain.blocks[1].Hash()},
+		GetBlockHeadersPacket: &G.GetBlockHeadersPacket{
+			Origin:  G.HashOrNumber{Hash: s.chain.blocks[1].Hash()},
 			Amount:  2,
 			Skip:    1,
 			Reverse: false,
@@ -150,8 +150,8 @@ func (s *Suite) TestSimultaneousRequests(t *utesting.T) {
 	// create two requests
 	req1 := &GetBlockHeaders{
 		RequestId: uint64(111),
-		GetBlockHeadersPacket: &eth.GetBlockHeadersPacket{
-			Origin: eth.HashOrNumber{
+		GetBlockHeadersPacket: &G.GetBlockHeadersPacket{
+			Origin: G.HashOrNumber{
 				Hash: s.chain.blocks[1].Hash(),
 			},
 			Amount:  2,
@@ -161,8 +161,8 @@ func (s *Suite) TestSimultaneousRequests(t *utesting.T) {
 	}
 	req2 := &GetBlockHeaders{
 		RequestId: uint64(222),
-		GetBlockHeadersPacket: &eth.GetBlockHeadersPacket{
-			Origin: eth.HashOrNumber{
+		GetBlockHeadersPacket: &G.GetBlockHeadersPacket{
+			Origin: G.HashOrNumber{
 				Hash: s.chain.blocks[1].Hash(),
 			},
 			Amount:  4,
@@ -224,8 +224,8 @@ func (s *Suite) TestSameRequestID(t *utesting.T) {
 	reqID := uint64(1234)
 	request1 := &GetBlockHeaders{
 		RequestId: reqID,
-		GetBlockHeadersPacket: &eth.GetBlockHeadersPacket{
-			Origin: eth.HashOrNumber{
+		GetBlockHeadersPacket: &G.GetBlockHeadersPacket{
+			Origin: G.HashOrNumber{
 				Number: 1,
 			},
 			Amount: 2,
@@ -233,8 +233,8 @@ func (s *Suite) TestSameRequestID(t *utesting.T) {
 	}
 	request2 := &GetBlockHeaders{
 		RequestId: reqID,
-		GetBlockHeadersPacket: &eth.GetBlockHeadersPacket{
-			Origin: eth.HashOrNumber{
+		GetBlockHeadersPacket: &G.GetBlockHeadersPacket{
+			Origin: G.HashOrNumber{
 				Number: 33,
 			},
 			Amount: 2,
@@ -290,8 +290,8 @@ func (s *Suite) TestZeroRequestID(t *utesting.T) {
 		t.Fatalf("peering failed: %v", err)
 	}
 	req := &GetBlockHeaders{
-		GetBlockHeadersPacket: &eth.GetBlockHeadersPacket{
-			Origin: eth.HashOrNumber{Number: 0},
+		GetBlockHeadersPacket: &G.GetBlockHeadersPacket{
+			Origin: G.HashOrNumber{Number: 0},
 			Amount: 2,
 		},
 	}
@@ -322,7 +322,7 @@ func (s *Suite) TestGetBlockBodies(t *utesting.T) {
 	// create block bodies request
 	req := &GetBlockBodies{
 		RequestId: uint64(55),
-		GetBlockBodiesPacket: eth.GetBlockBodiesPacket{
+		GetBlockBodiesPacket: G.GetBlockBodiesPacket{
 			s.chain.blocks[54].Hash(),
 			s.chain.blocks[75].Hash(),
 		},
@@ -534,7 +534,7 @@ func (s *Suite) TestNewPooledTxs(t *utesting.T) {
 	}
 
 	var ann Message = NewPooledTransactionHashes{Types: types, Sizes: sizes, Hashes: hashes}
-	if conn.negotiatedProtoVersion < eth.ETH68 {
+	if conn.negotiatedProtoVersion < G.ETH68 {
 		ann = NewPooledTransactionHashes66(hashes)
 	}
 	err = conn.Write(ann)

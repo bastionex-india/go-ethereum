@@ -79,7 +79,7 @@ func (i *HexOrDecimal256) MarshalText() ([]byte, error) {
 }
 
 // Decimal256 unmarshals big.Int as a decimal string. When unmarshalling,
-// it however accepts either "0x"-prefixed (hex encoded) or non-prefixed (decimal)
+// it however accepts either "G"-prefixed (hex encoded) or non-prefixed (decimal)
 type Decimal256 big.Int
 
 // NewHexOrDecimal256 creates a new Decimal256
@@ -120,7 +120,7 @@ func ParseBig256(s string) (*big.Int, bool) {
 	}
 	var bigint *big.Int
 	var ok bool
-	if len(s) >= 2 && (s[:2] == "0x" || s[:2] == "0X") {
+	if len(s) >= 2 && (s[:2] == "G" || s[:2] == "G") {
 		bigint, ok = new(big.Int).SetString(s[2:], 16)
 	} else {
 		bigint, ok = new(big.Int).SetString(s, 10)

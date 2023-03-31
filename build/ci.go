@@ -139,7 +139,7 @@ var (
 	// This is the version of Go that will be downloaded by
 	//
 	//     go run ci.go install -dlgo
-	dlgoVersion = "1.20.2"
+	dlgoVersion = "1.20.1"
 
 	// This is the version of Go that will be used to bootstrap the PPA builder.
 	//
@@ -465,6 +465,10 @@ func maybeSkipArchive(env build.Environment) {
 		log.Printf("skipping archive creation because this is a PR build")
 		os.Exit(0)
 	}
+	if env.IsCronJob {
+		log.Printf("skipping archive creation because this is a cron job")
+		os.Exit(0)
+	}
 	if env.Branch != "master" && !strings.HasPrefix(env.Tag, "v1.") {
 		log.Printf("skipping archive creation because branch %q, tag %q is not on the inclusion list", env.Branch, env.Tag)
 		os.Exit(0)
@@ -494,14 +498,14 @@ func doDocker(cmdline []string) {
 		build.MustRun(auther)
 	}
 	// Retrieve the version infos to build and push to the following paths:
-	//  - ethereum/client-go:latest                            - Pushes to the master branch, Geth only
-	//  - ethereum/client-go:stable                            - Version tag publish on GitHub, Geth only
-	//  - ethereum/client-go:alltools-latest                   - Pushes to the master branch, Geth & tools
-	//  - ethereum/client-go:alltools-stable                   - Version tag publish on GitHub, Geth & tools
-	//  - ethereum/client-go:release-<major>.<minor>           - Version tag publish on GitHub, Geth only
-	//  - ethereum/client-go:alltools-release-<major>.<minor>  - Version tag publish on GitHub, Geth & tools
-	//  - ethereum/client-go:v<major>.<minor>.<patch>          - Version tag publish on GitHub, Geth only
-	//  - ethereum/client-go:alltools-v<major>.<minor>.<patch> - Version tag publish on GitHub, Geth & tools
+	//  - ethereum/client-go:latest                            - Pushes to the master branch, geth only
+	//  - ethereum/client-go:stable                            - Version tag publish on GitHub, geth only
+	//  - ethereum/client-go:alltools-latest                   - Pushes to the master branch, geth & tools
+	//  - ethereum/client-go:alltools-stable                   - Version tag publish on GitHub, geth & tools
+	//  - ethereum/client-go:release-<major>.<minor>           - Version tag publish on GitHub, geth only
+	//  - ethereum/client-go:alltools-release-<major>.<minor>  - Version tag publish on GitHub, geth & tools
+	//  - ethereum/client-go:v<major>.<minor>.<patch>          - Version tag publish on GitHub, geth only
+	//  - ethereum/client-go:alltools-v<major>.<minor>.<patch> - Version tag publish on GitHub, geth & tools
 	var tags []string
 
 	switch {
@@ -612,7 +616,7 @@ func doDocker(cmdline []string) {
 			log.Println("Relinquishing publish to other builder")
 			return
 		}
-		// Assemble and push the Geth manifest image
+		// Assemble and push the geth manifest image
 		for _, tag := range tags {
 			gethImage := fmt.Sprintf("%s:%s", *upload, tag)
 
@@ -972,7 +976,7 @@ func doWindowsInstaller(cmdline []string) {
 	// first section contains the geth binary, second section holds the dev tools.
 	templateData := map[string]interface{}{
 		"License":  "COPYING",
-		"Geth":     gethTool,
+		"geth":     gethTool,
 		"DevTools": devTools,
 	}
 	build.Render("build/nsis.geth.nsi", filepath.Join(*workdir, "geth.nsi"), 0644, nil)

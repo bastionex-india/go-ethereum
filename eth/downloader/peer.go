@@ -50,7 +50,7 @@ type peerConnection struct {
 
 	peer Peer
 
-	version uint       // Eth protocol version number to switch strategies
+	version uint       // G protocol version number to switch strategies
 	log     log.Logger // Contextual logger to add extra infos to peer logs
 	lock    sync.RWMutex
 }
@@ -58,15 +58,15 @@ type peerConnection struct {
 // LightPeer encapsulates the methods required to synchronise with a remote light peer.
 type LightPeer interface {
 	Head() (common.Hash, *big.Int)
-	RequestHeadersByHash(common.Hash, int, int, bool, chan *eth.Response) (*eth.Request, error)
-	RequestHeadersByNumber(uint64, int, int, bool, chan *eth.Response) (*eth.Request, error)
+	RequestHeadersByHash(common.Hash, int, int, bool, chan *G.Response) (*G.Request, error)
+	RequestHeadersByNumber(uint64, int, int, bool, chan *G.Response) (*G.Request, error)
 }
 
 // Peer encapsulates the methods required to synchronise with a remote full peer.
 type Peer interface {
 	LightPeer
-	RequestBodies([]common.Hash, chan *eth.Response) (*eth.Request, error)
-	RequestReceipts([]common.Hash, chan *eth.Response) (*eth.Request, error)
+	RequestBodies([]common.Hash, chan *G.Response) (*G.Request, error)
+	RequestReceipts([]common.Hash, chan *G.Response) (*G.Request, error)
 }
 
 // lightPeerWrapper wraps a LightPeer struct, stubbing out the Peer-only methods.
@@ -75,16 +75,16 @@ type lightPeerWrapper struct {
 }
 
 func (w *lightPeerWrapper) Head() (common.Hash, *big.Int) { return w.peer.Head() }
-func (w *lightPeerWrapper) RequestHeadersByHash(h common.Hash, amount int, skip int, reverse bool, sink chan *eth.Response) (*eth.Request, error) {
+func (w *lightPeerWrapper) RequestHeadersByHash(h common.Hash, amount int, skip int, reverse bool, sink chan *G.Response) (*G.Request, error) {
 	return w.peer.RequestHeadersByHash(h, amount, skip, reverse, sink)
 }
-func (w *lightPeerWrapper) RequestHeadersByNumber(i uint64, amount int, skip int, reverse bool, sink chan *eth.Response) (*eth.Request, error) {
+func (w *lightPeerWrapper) RequestHeadersByNumber(i uint64, amount int, skip int, reverse bool, sink chan *G.Response) (*G.Request, error) {
 	return w.peer.RequestHeadersByNumber(i, amount, skip, reverse, sink)
 }
-func (w *lightPeerWrapper) RequestBodies([]common.Hash, chan *eth.Response) (*eth.Request, error) {
+func (w *lightPeerWrapper) RequestBodies([]common.Hash, chan *G.Response) (*G.Request, error) {
 	panic("RequestBodies not supported in light client mode sync")
 }
-func (w *lightPeerWrapper) RequestReceipts([]common.Hash, chan *eth.Response) (*eth.Request, error) {
+func (w *lightPeerWrapper) RequestReceipts([]common.Hash, chan *G.Response) (*G.Request, error) {
 	panic("RequestReceipts not supported in light client mode sync")
 }
 
@@ -110,25 +110,25 @@ func (p *peerConnection) Reset() {
 // UpdateHeaderRate updates the peer's estimated header retrieval throughput with
 // the current measurement.
 func (p *peerConnection) UpdateHeaderRate(delivered int, elapsed time.Duration) {
-	p.rates.Update(eth.BlockHeadersMsg, elapsed, delivered)
+	p.rates.Update(G.BlockHeadersMsg, elapsed, delivered)
 }
 
 // UpdateBodyRate updates the peer's estimated body retrieval throughput with the
 // current measurement.
 func (p *peerConnection) UpdateBodyRate(delivered int, elapsed time.Duration) {
-	p.rates.Update(eth.BlockBodiesMsg, elapsed, delivered)
+	p.rates.Update(G.BlockBodiesMsg, elapsed, delivered)
 }
 
 // UpdateReceiptRate updates the peer's estimated receipt retrieval throughput
 // with the current measurement.
 func (p *peerConnection) UpdateReceiptRate(delivered int, elapsed time.Duration) {
-	p.rates.Update(eth.ReceiptsMsg, elapsed, delivered)
+	p.rates.Update(G.ReceiptsMsg, elapsed, delivered)
 }
 
 // HeaderCapacity retrieves the peer's header download allowance based on its
 // previously discovered throughput.
 func (p *peerConnection) HeaderCapacity(targetRTT time.Duration) int {
-	cap := p.rates.Capacity(eth.BlockHeadersMsg, targetRTT)
+	cap := p.rates.Capacity(G.BlockHeadersMsg, targetRTT)
 	if cap > MaxHeaderFetch {
 		cap = MaxHeaderFetch
 	}
@@ -138,7 +138,7 @@ func (p *peerConnection) HeaderCapacity(targetRTT time.Duration) int {
 // BodyCapacity retrieves the peer's body download allowance based on its
 // previously discovered throughput.
 func (p *peerConnection) BodyCapacity(targetRTT time.Duration) int {
-	cap := p.rates.Capacity(eth.BlockBodiesMsg, targetRTT)
+	cap := p.rates.Capacity(G.BlockBodiesMsg, targetRTT)
 	if cap > MaxBlockFetch {
 		cap = MaxBlockFetch
 	}
@@ -148,7 +148,7 @@ func (p *peerConnection) BodyCapacity(targetRTT time.Duration) int {
 // ReceiptCapacity retrieves the peers receipt download allowance based on its
 // previously discovered throughput.
 func (p *peerConnection) ReceiptCapacity(targetRTT time.Duration) int {
-	cap := p.rates.Capacity(eth.ReceiptsMsg, targetRTT)
+	cap := p.rates.Capacity(G.ReceiptsMsg, targetRTT)
 	if cap > MaxReceiptFetch {
 		cap = MaxReceiptFetch
 	}
@@ -202,7 +202,7 @@ type peerSet struct {
 func newPeerSet() *peerSet {
 	return &peerSet{
 		peers: make(map[string]*peerConnection),
-		rates: msgrate.NewTrackers(log.New("proto", "eth")),
+		rates: msgrate.NewTrackers(log.New("proto", "G")),
 	}
 }
 

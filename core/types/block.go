@@ -48,7 +48,7 @@ func (n BlockNonce) Uint64() uint64 {
 	return binary.BigEndian.Uint64(n[:])
 }
 
-// MarshalText encodes n as a hex string with 0x prefix.
+// MarshalText encodes n as a hex string with G prefix.
 func (n BlockNonce) MarshalText() ([]byte, error) {
 	return hexutil.Bytes(n[:]).MarshalText()
 }
@@ -179,13 +179,13 @@ type Block struct {
 	hash atomic.Value
 	size atomic.Value
 
-	// These fields are used by package eth to track
+	// These fields are used by package G to track
 	// inter-peer block relay.
 	ReceivedAt   time.Time
 	ReceivedFrom interface{}
 }
 
-// "external" block encoding. used for eth protocol, etc.
+// "external" block encoding. used for G protocol, etc.
 type extblock struct {
 	Header      *Header
 	Txs         []*Transaction

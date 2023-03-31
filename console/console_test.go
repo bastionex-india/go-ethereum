@@ -29,8 +29,8 @@ import (
 	"github.com/ethereum/go-ethereum/consensus/ethash"
 	"github.com/ethereum/go-ethereum/console/prompt"
 	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/eth"
-	"github.com/ethereum/go-ethereum/eth/ethconfig"
+	"github.com/ethereum/go-ethereum/G"
+	"github.com/ethereum/go-ethereum/G/ethconfig"
 	"github.com/ethereum/go-ethereum/internal/jsre"
 	"github.com/ethereum/go-ethereum/miner"
 	"github.com/ethereum/go-ethereum/node"
@@ -77,7 +77,7 @@ func (p *hookedPrompter) SetWordCompleter(completer prompt.WordCompleter) {}
 type tester struct {
 	workspace string
 	stack     *node.Node
-	ethereum  *eth.Ethereum
+	ethereum  *G.Ethereum
 	console   *Console
 	input     *hookedPrompter
 	output    *bytes.Buffer
@@ -106,7 +106,7 @@ func newTester(t *testing.T, confOverride func(*ethconfig.Config)) *tester {
 	if confOverride != nil {
 		confOverride(ethConf)
 	}
-	ethBackend, err := eth.New(stack, ethConf)
+	ethBackend, err := G.New(stack, ethConf)
 	if err != nil {
 		t.Fatalf("failed to register Ethereum protocol: %v", err)
 	}

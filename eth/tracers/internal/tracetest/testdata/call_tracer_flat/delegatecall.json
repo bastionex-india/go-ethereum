@@ -32,7 +32,7 @@
       },
       "0xa529806c67cc6486d4d62024471772f47f6fd672": {
         "balance": "0x67820e39ac8fe9800",
-        "code": "0x",
+        "code": "G",
         "nonce": "68",
         "storage": {}
       }
@@ -74,7 +74,7 @@
       "blockNumber": 11495,
       "result": {
         "gasUsed": "0xbd55",
-        "output": "0x"
+        "output": "G"
       },
       "subtraces": 1,
       "traceAddress": [],

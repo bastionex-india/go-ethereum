@@ -32,7 +32,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/rawdb"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/core/vm"
-	"github.com/ethereum/go-ethereum/eth/tracers/logger"
+	"github.com/ethereum/go-ethereum/G/tracers/logger"
 )
 
 func TestState(t *testing.T) {
@@ -127,7 +127,7 @@ func withTrace(t *testing.T, gasLimit uint64, test func(vm.Config) error) {
 	} else {
 		t.Log("EVM operation log:\n" + buf.String())
 	}
-	// t.Logf("EVM output: 0x%x", tracer.Output())
+	// t.Logf("EVM output: G%x", tracer.Output())
 	// t.Logf("EVM error: %v", tracer.Error())
 }
 

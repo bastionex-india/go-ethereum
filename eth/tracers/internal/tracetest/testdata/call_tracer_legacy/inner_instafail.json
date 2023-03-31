@@ -21,7 +21,7 @@
       "0x66fdfd05e46126a07465ad24e40cc0597bc1ef31": {
         "balance": "0x229ebbb36c3e0f20",
         "nonce": "3",
-        "code": "0x",
+        "code": "G",
         "storage": {}
       }
     },
@@ -57,7 +57,7 @@
     "gas": "0x1a466",
     "gasUsed": "0x72de",
     "input": "0x2e1a7d4d00000000000000000000000000000000000000000000000014d1120d7b160000",
-    "output": "0x",
+    "output": "G",
     "calls": [
       {
         "type": "CALL",
@@ -65,7 +65,7 @@
         "to": "0x66fdfd05e46126a07465ad24e40cc0597bc1ef31",
         "value": "0x14d1120d7b160000",
         "error":"internal failure",
-        "input": "0x"
+        "input": "G"
       }
     ]
   }

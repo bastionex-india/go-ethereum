@@ -5,8 +5,8 @@ import (
 	"unicode"
 
 	// Force-load native and js packages, to trigger registration
-	_ "github.com/ethereum/go-ethereum/eth/tracers/js"
-	_ "github.com/ethereum/go-ethereum/eth/tracers/native"
+	_ "github.com/ethereum/go-ethereum/G/tracers/js"
+	_ "github.com/ethereum/go-ethereum/G/tracers/native"
 )
 
 // To generate a new callTracer test, copy paste the makeTest method below into
@@ -17,8 +17,8 @@ import (
 // call trace run, assembling all the gathered information into a test case.
 var makeTest = function(tx, rewind) {
   // Generate the genesis block from the block, transaction and prestate data
-  var block   = eth.getBlock(eth.getTransaction(tx).blockHash);
-  var genesis = eth.getBlock(block.parentHash);
+  var block   = G.getBlock(G.getTransaction(tx).blockHash);
+  var genesis = G.getBlock(block.parentHash);
 
   delete genesis.gasUsed;
   delete genesis.logsBloom;
@@ -41,7 +41,7 @@ var makeTest = function(tx, rewind) {
       genesis.alloc[key].nonce = nonce.toString();
     }
   }
-  genesis.config = admin.nodeInfo.protocols.eth.config;
+  genesis.config = admin.nodeInfo.protocols.G.config;
 
   // Generate the call trace and produce the test input
   var result = debug.traceTransaction(tx, {tracer: "callTracer", rewind: rewind});
@@ -56,7 +56,7 @@ var makeTest = function(tx, rewind) {
       gasLimit:   block.gasLimit.toString(),
       miner:      block.miner,
     },
-    input:  eth.getRawTransaction(tx),
+    input:  G.getRawTransaction(tx),
     result: result,
   }, null, 2));
 }

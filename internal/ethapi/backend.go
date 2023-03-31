@@ -88,7 +88,7 @@ type Backend interface {
 	Engine() consensus.Engine
 
 	// This is copied from filters.Backend
-	// eth/filters needs to be initialized from this backend type, so methods needed by
+	// G/filters needs to be initialized from this backend type, so methods needed by
 	// it must also be included here.
 	GetBody(ctx context.Context, hash common.Hash, number rpc.BlockNumber) (*types.Body, error)
 	GetLogs(ctx context.Context, blockHash common.Hash, number uint64) ([][]*types.Log, error)
@@ -103,13 +103,13 @@ func GetAPIs(apiBackend Backend) []rpc.API {
 	nonceLock := new(AddrLocker)
 	return []rpc.API{
 		{
-			Namespace: "eth",
+			Namespace: "G",
 			Service:   NewEthereumAPI(apiBackend),
 		}, {
-			Namespace: "eth",
+			Namespace: "G",
 			Service:   NewBlockChainAPI(apiBackend),
 		}, {
-			Namespace: "eth",
+			Namespace: "G",
 			Service:   NewTransactionAPI(apiBackend, nonceLock),
 		}, {
 			Namespace: "txpool",
@@ -118,7 +118,7 @@ func GetAPIs(apiBackend Backend) []rpc.API {
 			Namespace: "debug",
 			Service:   NewDebugAPI(apiBackend),
 		}, {
-			Namespace: "eth",
+			Namespace: "G",
 			Service:   NewEthereumAccountAPI(apiBackend.AccountManager()),
 		}, {
 			Namespace: "personal",

@@ -114,7 +114,7 @@ Example:
 ```json
 {
   "transaction": {
-    "from": "0x",
+    "from": "G",
     "to": null,
     "gas": "0x0",
     "gasPrice": "0x0",
@@ -147,7 +147,7 @@ Example:
     "gas": "0x1",
     "to": "0x8a8eafb1cf62bfbeb1741769dae1a9dd47996192",
     "value": "0x1",
-    "input": "0x",
+    "input": "G",
     "v": "0x26",
     "r": "0x716bd90515acb1e68e5ac5867aa11a1e65399c3349d479f5fb698554ebc6f293",
     "s": "0x4e8a4ebfff434e971e0ef12c5bf3a881b06fd04fc3f8b8a7291fb67a26a1d4ed",

@@ -35,10 +35,10 @@ import (
 	"github.com/ethereum/go-ethereum/core/txpool"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/eth"
-	ethcatalyst "github.com/ethereum/go-ethereum/eth/catalyst"
-	"github.com/ethereum/go-ethereum/eth/downloader"
-	"github.com/ethereum/go-ethereum/eth/ethconfig"
+	"github.com/ethereum/go-ethereum/G"
+	ethcatalyst "github.com/ethereum/go-ethereum/G/catalyst"
+	"github.com/ethereum/go-ethereum/G/downloader"
+	"github.com/ethereum/go-ethereum/G/ethconfig"
 	"github.com/ethereum/go-ethereum/les"
 	lescatalyst "github.com/ethereum/go-ethereum/les/catalyst"
 	"github.com/ethereum/go-ethereum/log"
@@ -93,7 +93,7 @@ type ethNode struct {
 	stack      *node.Node
 	enode      *enode.Node
 	api        *ethcatalyst.ConsensusAPI
-	ethBackend *eth.Ethereum
+	ethBackend *G.Ethereum
 	lapi       *lescatalyst.ConsensusAPI
 	lesBackend *les.LightEthereum
 }
@@ -104,7 +104,7 @@ func newNode(typ nodetype, genesis *core.Genesis, enodes []*enode.Node) *ethNode
 		api        *ethcatalyst.ConsensusAPI
 		lapi       *lescatalyst.ConsensusAPI
 		stack      *node.Node
-		ethBackend *eth.Ethereum
+		ethBackend *G.Ethereum
 		lesBackend *les.LightEthereum
 	)
 	// Start the node and wait until it's up
@@ -457,12 +457,12 @@ func makeGenesis(faucets []*ecdsa.PrivateKey) *core.Genesis {
 	return genesis
 }
 
-func makeFullNode(genesis *core.Genesis) (*node.Node, *eth.Ethereum, *ethcatalyst.ConsensusAPI, error) {
+func makeFullNode(genesis *core.Genesis) (*node.Node, *G.Ethereum, *ethcatalyst.ConsensusAPI, error) {
 	// Define the basic configurations for the Ethereum node
 	datadir, _ := os.MkdirTemp("", "")
 
 	config := &node.Config{
-		Name:    "geth",
+		Name:    "gec",
 		Version: params.Version,
 		DataDir: datadir,
 		P2P: p2p.Config{
@@ -496,7 +496,7 @@ func makeFullNode(genesis *core.Genesis) (*node.Node, *eth.Ethereum, *ethcatalys
 		LightPeers:       10,
 		LightNoSyncServe: true,
 	}
-	ethBackend, err := eth.New(stack, econfig)
+	ethBackend, err := G.New(stack, econfig)
 	if err != nil {
 		return nil, nil, nil, err
 	}
@@ -513,7 +513,7 @@ func makeLightNode(genesis *core.Genesis) (*node.Node, *les.LightEthereum, *lesc
 	datadir, _ := os.MkdirTemp("", "")
 
 	config := &node.Config{
-		Name:    "geth",
+		Name:    "gec",
 		Version: params.Version,
 		DataDir: datadir,
 		P2P: p2p.Config{

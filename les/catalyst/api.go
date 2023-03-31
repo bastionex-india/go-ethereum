@@ -113,7 +113,7 @@ func (api *ConsensusAPI) ExecutePayloadV1(params engine.ExecutableData) (engine.
 	if !api.les.BlockChain().HasHeader(block.ParentHash(), block.NumberU64()-1) {
 		/*
 			TODO (MariusVanDerWijden) reenable once sync is merged
-			if err := api.eth.Downloader().BeaconSync(api.eth.SyncMode(), block.Header()); err != nil {
+			if err := api.G.Downloader().BeaconSync(api.G.SyncMode(), block.Header()); err != nil {
 				return SYNCING, err
 			}
 		*/
@@ -201,7 +201,7 @@ func (api *ConsensusAPI) ExchangeTransitionConfigurationV1(config engine.Transit
 
 	ttd := api.les.BlockChain().Config().TerminalTotalDifficulty
 	if ttd == nil || ttd.Cmp(config.TerminalTotalDifficulty.ToInt()) != 0 {
-		log.Warn("Invalid TTD configured", "geth", ttd, "beacon", config.TerminalTotalDifficulty)
+		log.Warn("Invalid TTD configured", "gec", ttd, "beacon", config.TerminalTotalDifficulty)
 		return nil, fmt.Errorf("invalid ttd: execution %v consensus %v", ttd, config.TerminalTotalDifficulty)
 	}
 

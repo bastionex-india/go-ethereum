@@ -110,7 +110,7 @@ func (sys *FilterSystem) cachedLogElem(ctx context.Context, blockHash common.Has
 		return nil, err
 	}
 	if logs == nil {
-		return nil, fmt.Errorf("failed to get logs for block #%d (0x%s)", number, blockHash.TerminalString())
+		return nil, fmt.Errorf("failed to get logs for block #%d (G%s)", number, blockHash.TerminalString())
 	}
 	// Database logs are un-derived.
 	// Fill in whatever we can (txHash is inaccessible at this point).

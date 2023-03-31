@@ -10,7 +10,7 @@
     "alloc": {
       "0x0024f658a46fbb89d8ac105e98d7ac7cbbaf27c5": {
         "balance": "0x0",
-        "code": "0x",
+        "code": "G",
         "nonce": "22",
         "storage": {}
       },
@@ -27,7 +27,7 @@
       },
       "0xb436ba50d378d4bbc8660d312a13df6af6e89dfb": {
         "balance": "0x1780d77678137ac1b775",
-        "code": "0x",
+        "code": "G",
         "nonce": "29072",
         "storage": {}
       }
@@ -59,7 +59,7 @@
   "result": {
     "0x0024f658a46fbb89d8ac105e98d7ac7cbbaf27c5": {
       "balance": "0x0",
-      "code": "0x",
+      "code": "G",
       "nonce": 22,
       "storage": {}
     },
@@ -76,7 +76,7 @@
     },
     "0xb436ba50d378d4bbc8660d312a13df6af6e89dfb": {
       "balance": "0x1780d77678137ac1b775",
-      "code": "0x",
+      "code": "G",
       "nonce": 29072,
       "storage": {}
     }

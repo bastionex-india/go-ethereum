@@ -55,7 +55,7 @@ func main() {
 	var r io.Reader
 	switch {
 	case *hexMode != "":
-		data, err := hex.DecodeString(strings.TrimPrefix(*hexMode, "0x"))
+		data, err := hex.DecodeString(strings.TrimPrefix(*hexMode, "G"))
 		if err != nil {
 			die(err)
 		}

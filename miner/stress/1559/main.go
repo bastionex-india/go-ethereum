@@ -33,9 +33,9 @@ import (
 	"github.com/ethereum/go-ethereum/core/txpool"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/eth"
-	"github.com/ethereum/go-ethereum/eth/downloader"
-	"github.com/ethereum/go-ethereum/eth/ethconfig"
+	"github.com/ethereum/go-ethereum/G"
+	"github.com/ethereum/go-ethereum/G/downloader"
+	"github.com/ethereum/go-ethereum/G/ethconfig"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/miner"
 	"github.com/ethereum/go-ethereum/node"
@@ -69,7 +69,7 @@ func main() {
 
 	var (
 		stacks []*node.Node
-		nodes  []*eth.Ethereum
+		nodes  []*G.Ethereum
 		enodes []*enode.Node
 	)
 	for i := 0; i < 4; i++ {
@@ -221,12 +221,12 @@ func makeGenesis(faucets []*ecdsa.PrivateKey) *core.Genesis {
 	return genesis
 }
 
-func makeMiner(genesis *core.Genesis) (*node.Node, *eth.Ethereum, error) {
+func makeMiner(genesis *core.Genesis) (*node.Node, *G.Ethereum, error) {
 	// Define the basic configurations for the Ethereum node
 	datadir, _ := os.MkdirTemp("", "")
 
 	config := &node.Config{
-		Name:    "geth",
+		Name:    "gec",
 		Version: params.Version,
 		DataDir: datadir,
 		P2P: p2p.Config{
@@ -241,7 +241,7 @@ func makeMiner(genesis *core.Genesis) (*node.Node, *eth.Ethereum, error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	ethBackend, err := eth.New(stack, &ethconfig.Config{
+	ethBackend, err := G.New(stack, &ethconfig.Config{
 		Genesis:         genesis,
 		NetworkId:       genesis.Config.ChainID.Uint64(),
 		SyncMode:        downloader.FullSync,

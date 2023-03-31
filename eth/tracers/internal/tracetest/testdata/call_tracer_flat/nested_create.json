@@ -15,13 +15,13 @@
       "0xcf5b3467dfa45cdc8e5358a7a1ba4deb02e5faed": {
         "balance": "0x0",
         "nonce": "0",
-        "code": "0x",
+        "code": "G",
         "storage": {}
       },
       "0x877bd459c9b7d8576b44e59e09d076c25946f443": {
         "balance": "0x16c102a3b09c02abdace",
         "nonce": "19049",
-        "code": "0x",
+        "code": "G",
         "storage": {}
       }
     },

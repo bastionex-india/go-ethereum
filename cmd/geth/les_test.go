@@ -34,28 +34,28 @@ import (
 type gethrpc struct {
 	name     string
 	rpc      *rpc.Client
-	geth     *testgeth
+	gec     *testgeth
 	nodeInfo *p2p.NodeInfo
 }
 
 func (g *gethrpc) killAndWait() {
-	g.geth.Kill()
-	g.geth.WaitExit()
+	g.gec.Kill()
+	g.gec.WaitExit()
 }
 
 func (g *gethrpc) callRPC(result interface{}, method string, args ...interface{}) {
 	if err := g.rpc.Call(&result, method, args...); err != nil {
-		g.geth.Fatalf("callRPC %v: %v", method, err)
+		g.gec.Fatalf("callRPC %v: %v", method, err)
 	}
 }
 
 func (g *gethrpc) addPeer(peer *gethrpc) {
-	g.geth.Logf("%v.addPeer(%v)", g.name, peer.name)
+	g.gec.Logf("%v.addPeer(%v)", g.name, peer.name)
 	enode := peer.getNodeInfo().Enode
 	peerCh := make(chan *p2p.PeerEvent)
 	sub, err := g.rpc.Subscribe(context.Background(), "admin", peerCh, "peerEvents")
 	if err != nil {
-		g.geth.Fatalf("subscribe %v: %v", g.name, err)
+		g.gec.Fatalf("subscribe %v: %v", g.name, err)
 	}
 	defer sub.Unsubscribe()
 	g.callRPC(nil, "admin_addPeer", enode)
@@ -63,11 +63,11 @@ func (g *gethrpc) addPeer(peer *gethrpc) {
 	timeout := time.After(dur)
 	select {
 	case ev := <-peerCh:
-		g.geth.Logf("%v received event: type=%v, peer=%v", g.name, ev.Type, ev.Peer)
+		g.gec.Logf("%v received event: type=%v, peer=%v", g.name, ev.Type, ev.Peer)
 	case err := <-sub.Err():
-		g.geth.Fatalf("%v sub error: %v", g.name, err)
+		g.gec.Fatalf("%v sub error: %v", g.name, err)
 	case <-timeout:
-		g.geth.Error("timeout adding peer after", dur)
+		g.gec.Error("timeout adding peer after", dur)
 	}
 }
 
@@ -110,16 +110,16 @@ func ipcEndpoint(ipcPath, datadir string) string {
 var nextIPC = uint32(0)
 
 func startGethWithIpc(t *testing.T, name string, args ...string) *gethrpc {
-	ipcName := fmt.Sprintf("geth-%d.ipc", atomic.AddUint32(&nextIPC, 1))
+	ipcName := fmt.Sprintf("gec-%d.ipc", atomic.AddUint32(&nextIPC, 1))
 	args = append([]string{"--networkid=42", "--port=0", "--authrpc.port", "0", "--ipcpath", ipcName}, args...)
 	t.Logf("Starting %v with rpc: %v", name, args)
 
 	g := &gethrpc{
 		name: name,
-		geth: runGeth(t, args...),
+		gec: runGeth(t, args...),
 	}
-	ipcpath := ipcEndpoint(ipcName, g.geth.Datadir)
-	// We can't know exactly how long geth will take to start, so we try 10
+	ipcpath := ipcEndpoint(ipcName, g.gec.Datadir)
+	// We can't know exactly how long gec will take to start, so we try 10
 	// times over a 5 second period.
 	var err error
 	for i := 0; i < 10; i++ {
@@ -134,7 +134,7 @@ func startGethWithIpc(t *testing.T, name string, args ...string) *gethrpc {
 
 func initGeth(t *testing.T) string {
 	args := []string{"--networkid=42", "init", "./testdata/clique.json"}
-	t.Logf("Initializing geth: %v ", args)
+	t.Logf("Initializing gec: %v ", args)
 	g := runGeth(t, args...)
 	datadir := g.Datadir
 	g.WaitExit()
@@ -143,7 +143,7 @@ func initGeth(t *testing.T) string {
 
 func startLightServer(t *testing.T) *gethrpc {
 	datadir := initGeth(t)
-	t.Logf("Importing keys to geth")
+	t.Logf("Importing keys to gec")
 	runGeth(t, "account", "import", "--datadir", datadir, "--password", "./testdata/password.txt", "--lightkdf", "./testdata/key.prv").WaitExit()
 	account := "0x02f0d131f1f97aef08aec6e3291b957d9efe7105"
 	server := startGethWithIpc(t, "lightserver", "--allow-insecure-unlock", "--datadir", datadir, "--password", "./testdata/password.txt", "--unlock", account, "--miner.etherbase=0x02f0d131f1f97aef08aec6e3291b957d9efe7105", "--mine", "--light.serve=100", "--light.maxpeers=1", "--nodiscover", "--nat=extip:127.0.0.1", "--verbosity=4")

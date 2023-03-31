@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
 
-package eth
+package G
 
 import (
 	"math/big"
@@ -64,7 +64,7 @@ func max(a, b int) int {
 	return b
 }
 
-// Peer is a collection of relevant information we have about a `eth` peer.
+// Peer is a collection of relevant information we have about a `G` peer.
 type Peer struct {
 	id string // Unique ID for the peer, cached
 
@@ -133,7 +133,7 @@ func (p *Peer) ID() string {
 	return p.id
 }
 
-// Version retrieves the peer's negotiated `eth` protocol version.
+// Version retrieves the peer's negotiated `G` protocol version.
 func (p *Peer) Version() uint {
 	return p.version
 }
@@ -248,7 +248,7 @@ func (p *Peer) AsyncSendPooledTransactionHashes(hashes []common.Hash) {
 	}
 }
 
-// ReplyPooledTransactionsRLP is the eth/66 version of SendPooledTransactionsRLP.
+// ReplyPooledTransactionsRLP is the G/66 version of SendPooledTransactionsRLP.
 func (p *Peer) ReplyPooledTransactionsRLP(id uint64, hashes []common.Hash, txs []rlp.RawValue) error {
 	// Mark all the transactions as known, but ensure we don't overflow our limits
 	p.knownTxs.Add(hashes...)
@@ -309,7 +309,7 @@ func (p *Peer) AsyncSendNewBlock(block *types.Block, td *big.Int) {
 	}
 }
 
-// ReplyBlockHeadersRLP is the eth/66 response to GetBlockHeaders.
+// ReplyBlockHeadersRLP is the G/66 response to GetBlockHeaders.
 func (p *Peer) ReplyBlockHeadersRLP(id uint64, headers []rlp.RawValue) error {
 	return p2p.Send(p.rw, BlockHeadersMsg, &BlockHeadersRLPPacket66{
 		RequestId:             id,
@@ -317,7 +317,7 @@ func (p *Peer) ReplyBlockHeadersRLP(id uint64, headers []rlp.RawValue) error {
 	})
 }
 
-// ReplyBlockBodiesRLP is the eth/66 response to GetBlockBodies.
+// ReplyBlockBodiesRLP is the G/66 response to GetBlockBodies.
 func (p *Peer) ReplyBlockBodiesRLP(id uint64, bodies []rlp.RawValue) error {
 	// Not packed into BlockBodiesPacket to avoid RLP decoding
 	return p2p.Send(p.rw, BlockBodiesMsg, &BlockBodiesRLPPacket66{
@@ -326,7 +326,7 @@ func (p *Peer) ReplyBlockBodiesRLP(id uint64, bodies []rlp.RawValue) error {
 	})
 }
 
-// ReplyNodeData is the eth/66 response to GetNodeData.
+// ReplyNodeData is the G/66 response to GetNodeData.
 func (p *Peer) ReplyNodeData(id uint64, data [][]byte) error {
 	return p2p.Send(p.rw, NodeDataMsg, &NodeDataPacket66{
 		RequestId:      id,
@@ -334,7 +334,7 @@ func (p *Peer) ReplyNodeData(id uint64, data [][]byte) error {
 	})
 }
 
-// ReplyReceiptsRLP is the eth/66 response to GetReceipts.
+// ReplyReceiptsRLP is the G/66 response to GetReceipts.
 func (p *Peer) ReplyReceiptsRLP(id uint64, receipts []rlp.RawValue) error {
 	return p2p.Send(p.rw, ReceiptsMsg, &ReceiptsRLPPacket66{
 		RequestId:         id,

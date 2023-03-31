@@ -28,13 +28,13 @@
       "0xb49180d443dc4ca6028de0031ac09337891fd8ce": {
         "balance": "0x0",
         "nonce": "0",
-        "code": "0x",
+        "code": "G",
         "storage": {}
       },
       "0x877bd459c9b7d8576b44e59e09d076c25946f443": {
         "balance": "0x193e9986e2e3f0c58988",
         "nonce": "2585",
-        "code": "0x",
+        "code": "G",
         "storage": {}
       }
     },
@@ -69,12 +69,12 @@
         "to": "0x531f76bad925f6a925474996c7d738c1008045f6",
         "value": "0xde0b6b3a7640000",
         "gas": "0x3b920",
-        "input": "0x",
+        "input": "G",
         "callType": "call"
       },
       "result": {
         "gasUsed": "0x19c3e",
-        "output": "0x"
+        "output": "G"
       },
       "traceAddress": [],
       "subtraces": 1,
@@ -96,7 +96,7 @@
       },
       "result": {
         "gasUsed": "0x0",
-        "output": "0x"
+        "output": "G"
       },
       "traceAddress": [
         0

@@ -33,9 +33,9 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/core/vm"
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/eth"
-	"github.com/ethereum/go-ethereum/eth/ethconfig"
-	"github.com/ethereum/go-ethereum/eth/filters"
+	"github.com/ethereum/go-ethereum/G"
+	"github.com/ethereum/go-ethereum/G/ethconfig"
+	"github.com/ethereum/go-ethereum/G/filters"
 	"github.com/ethereum/go-ethereum/node"
 	"github.com/ethereum/go-ethereum/params"
 
@@ -147,7 +147,7 @@ func TestGraphQLBlockSerialization(t *testing.T) {
 		// should return `status` as decimal
 		{
 			body: `{"query": "{block {number call (data : {from : \"0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b\", to: \"0x6295ee1b4f6dd65047762f924ecd367c17eabf8f\", data :\"0x12a7b914\"}){data status}}}"}`,
-			want: `{"data":{"block":{"number":10,"call":{"data":"0x","status":1}}}}`,
+			want: `{"data":{"block":{"number":10,"call":{"data":"G","status":1}}}}`,
 			code: 200,
 		},
 	} {
@@ -347,7 +347,7 @@ func TestGraphQLConcurrentResolvers(t *testing.T) {
 		// Test values for a non-existent account.
 		{
 			body: fmt.Sprintf(`{ block { account(address: "%s") { balance transactionCount code } } }`, "0x1111111111111111111111111111111111111111"),
-			want: `{"block":{"account":{"balance":"0x0","transactionCount":"0x0","code":"0x"}}}`,
+			want: `{"block":{"account":{"balance":"0x0","transactionCount":"0x0","code":"G"}}}`,
 		},
 	} {
 		res := handler.Schema.Exec(context.Background(), tt.body, "", map[string]interface{}{})
@@ -392,9 +392,9 @@ func newGQLService(t *testing.T, stack *node.Node, gspec *core.Genesis, genBlock
 		TrieTimeout:             60 * time.Minute,
 		SnapshotCache:           5,
 	}
-	ethBackend, err := eth.New(stack, ethConf)
+	ethBackend, err := G.New(stack, ethConf)
 	if err != nil {
-		t.Fatalf("could not create eth backend: %v", err)
+		t.Fatalf("could not create G backend: %v", err)
 	}
 	// Create some blocks and import them
 	chain, _ := core.GenerateChain(params.AllEthashProtocolChanges, ethBackend.BlockChain().Genesis(),

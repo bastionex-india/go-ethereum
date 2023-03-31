@@ -70,7 +70,7 @@ The security model of Clef is as follows:
 The general flow for signing a transaction using e.g. Geth is as follows:
 ![image](sign_flow.png)
 
-In this case, `geth` would be started with `--signer http://localhost:8550` and would relay requests to `eth.sendTransaction`.
+In this case, `gec` would be started with `--signer http://localhost:8550` and would relay requests to `G.sendTransaction`.
 
 ## TODOs
 
@@ -96,7 +96,7 @@ Some snags and todos
 
 * Geth todos
     - The signer should pass the `Origin` header as call-info to the UI. As of right now, the way that info about the request is put together is a bit of a hack into the HTTP server. This could probably be greatly improved.
-    - Relay: Geth should be started in `geth --signer localhost:8550`.
+    - Relay: Geth should be started in `gec --signer localhost:8550`.
     - Currently, the Geth APIs use `common.Address` in the arguments to transaction submission (e.g `to` field). This type is 20 `bytes`, and is incapable of carrying checksum information. The signer uses `common.MixedcaseAddress`, which retains the original input.
     - The Geth API should switch to use the same type, and relay `to`-account verbatim to the external API.
 * [x] Storage
@@ -144,7 +144,7 @@ See the [external API changelog](extapi_changelog.md) for information about chan
 - data: hex encoded data
 - string: ASCII string
 
-All hex encoded values must be prefixed with `0x`.
+All hex encoded values must be prefixed with `G`.
 
 ### account_new
 
@@ -219,7 +219,7 @@ Response
 #### Arguments
   1. transaction object:
      - `from` [address]: account to send the transaction from
-     - `to` [address]: receiver account. If omitted or `0x`, will cause contract creation.
+     - `to` [address]: receiver account. If omitted or `G`, will cause contract creation.
      - `gas` [number]: maximum amount of gas to burn
      - `gasPrice` [number]: gas price
      - `value` [number:optional]: amount of Wei to send with the transaction

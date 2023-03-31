@@ -13,9 +13,9 @@ PageEx license
 PageExEnd
 
 # Install geth binary
-Section "Geth" GETH_IDX
+Section "geth" geth_IDX
   SetOutPath $INSTDIR
-  file {{.Geth}}
+  file {{.geth}}
 
   # Create start menu launcher
   createDirectory "$SMPROGRAMS\${APPNAME}"
@@ -24,14 +24,14 @@ Section "Geth" GETH_IDX
   createShortCut "$SMPROGRAMS\${APPNAME}\Uninstall.lnk" "$INSTDIR\uninstall.exe"
 
   # Firewall - remove rules (if exists)
-  SimpleFC::AdvRemoveRule "Geth incoming peers (TCP:30303)"
-  SimpleFC::AdvRemoveRule "Geth outgoing peers (TCP:30303)"
-  SimpleFC::AdvRemoveRule "Geth UDP discovery (UDP:30303)"
+  SimpleFC::AdvRemoveRule "geth incoming peers (TCP:30303)"
+  SimpleFC::AdvRemoveRule "geth outgoing peers (TCP:30303)"
+  SimpleFC::AdvRemoveRule "geth UDP discovery (UDP:30303)"
 
   # Firewall - add rules
-  SimpleFC::AdvAddRule "Geth incoming peers (TCP:30303)" ""  6 1 1 2147483647 1 "$INSTDIR\geth.exe" "" "" "Ethereum" 30303 "" "" ""
-  SimpleFC::AdvAddRule "Geth outgoing peers (TCP:30303)" ""  6 2 1 2147483647 1 "$INSTDIR\geth.exe" "" "" "Ethereum" "" 30303 "" ""
-  SimpleFC::AdvAddRule "Geth UDP discovery (UDP:30303)" "" 17 2 1 2147483647 1 "$INSTDIR\geth.exe" "" "" "Ethereum" "" 30303 "" ""
+  SimpleFC::AdvAddRule "geth incoming peers (TCP:30303)" ""  6 1 1 2147483647 1 "$INSTDIR\geth.exe" "" "" "Ethereum" 30303 "" "" ""
+  SimpleFC::AdvAddRule "geth outgoing peers (TCP:30303)" ""  6 2 1 2147483647 1 "$INSTDIR\geth.exe" "" "" "Ethereum" "" 30303 "" ""
+  SimpleFC::AdvAddRule "geth UDP discovery (UDP:30303)" "" 17 2 1 2147483647 1 "$INSTDIR\geth.exe" "" "" "Ethereum" "" 30303 "" ""
 
   # Set default IPC endpoint (https://github.com/ethereum/EIPs/issues/147)
   ${EnvVarUpdate} $0 "ETHEREUM_SOCKET" "R" "HKLM" "\\.\pipe\geth.ipc"
@@ -54,8 +54,8 @@ Var GetInstalledSize.total
 Function GetInstalledSize
   StrCpy $GetInstalledSize.total 0
 
-  ${if} ${SectionIsSelected} ${GETH_IDX}
-    SectionGetSize ${GETH_IDX} $0
+  ${if} ${SectionIsSelected} ${geth_IDX}
+    SectionGetSize ${geth_IDX} $0
     IntOp $GetInstalledSize.total $GetInstalledSize.total + $0
   ${endif}
 
@@ -64,7 +64,7 @@ Function GetInstalledSize
     IntOp $GetInstalledSize.total $GetInstalledSize.total + $0
   ${endif}
 
-  IntFmt $GetInstalledSize.total "0x%08X" $GetInstalledSize.total
+  IntFmt $GetInstalledSize.total "GEC%08X" $GetInstalledSize.total
   Push $GetInstalledSize.total
 FunctionEnd
 

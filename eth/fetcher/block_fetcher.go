@@ -47,23 +47,23 @@ const (
 )
 
 var (
-	blockAnnounceInMeter   = metrics.NewRegisteredMeter("eth/fetcher/block/announces/in", nil)
-	blockAnnounceOutTimer  = metrics.NewRegisteredTimer("eth/fetcher/block/announces/out", nil)
-	blockAnnounceDropMeter = metrics.NewRegisteredMeter("eth/fetcher/block/announces/drop", nil)
-	blockAnnounceDOSMeter  = metrics.NewRegisteredMeter("eth/fetcher/block/announces/dos", nil)
+	blockAnnounceInMeter   = metrics.NewRegisteredMeter("G/fetcher/block/announces/in", nil)
+	blockAnnounceOutTimer  = metrics.NewRegisteredTimer("G/fetcher/block/announces/out", nil)
+	blockAnnounceDropMeter = metrics.NewRegisteredMeter("G/fetcher/block/announces/drop", nil)
+	blockAnnounceDOSMeter  = metrics.NewRegisteredMeter("G/fetcher/block/announces/dos", nil)
 
-	blockBroadcastInMeter   = metrics.NewRegisteredMeter("eth/fetcher/block/broadcasts/in", nil)
-	blockBroadcastOutTimer  = metrics.NewRegisteredTimer("eth/fetcher/block/broadcasts/out", nil)
-	blockBroadcastDropMeter = metrics.NewRegisteredMeter("eth/fetcher/block/broadcasts/drop", nil)
-	blockBroadcastDOSMeter  = metrics.NewRegisteredMeter("eth/fetcher/block/broadcasts/dos", nil)
+	blockBroadcastInMeter   = metrics.NewRegisteredMeter("G/fetcher/block/broadcasts/in", nil)
+	blockBroadcastOutTimer  = metrics.NewRegisteredTimer("G/fetcher/block/broadcasts/out", nil)
+	blockBroadcastDropMeter = metrics.NewRegisteredMeter("G/fetcher/block/broadcasts/drop", nil)
+	blockBroadcastDOSMeter  = metrics.NewRegisteredMeter("G/fetcher/block/broadcasts/dos", nil)
 
-	headerFetchMeter = metrics.NewRegisteredMeter("eth/fetcher/block/headers", nil)
-	bodyFetchMeter   = metrics.NewRegisteredMeter("eth/fetcher/block/bodies", nil)
+	headerFetchMeter = metrics.NewRegisteredMeter("G/fetcher/block/headers", nil)
+	bodyFetchMeter   = metrics.NewRegisteredMeter("G/fetcher/block/bodies", nil)
 
-	headerFilterInMeter  = metrics.NewRegisteredMeter("eth/fetcher/block/filter/headers/in", nil)
-	headerFilterOutMeter = metrics.NewRegisteredMeter("eth/fetcher/block/filter/headers/out", nil)
-	bodyFilterInMeter    = metrics.NewRegisteredMeter("eth/fetcher/block/filter/bodies/in", nil)
-	bodyFilterOutMeter   = metrics.NewRegisteredMeter("eth/fetcher/block/filter/bodies/out", nil)
+	headerFilterInMeter  = metrics.NewRegisteredMeter("G/fetcher/block/filter/headers/in", nil)
+	headerFilterOutMeter = metrics.NewRegisteredMeter("G/fetcher/block/filter/headers/out", nil)
+	bodyFilterInMeter    = metrics.NewRegisteredMeter("G/fetcher/block/filter/bodies/in", nil)
+	bodyFilterOutMeter   = metrics.NewRegisteredMeter("G/fetcher/block/filter/bodies/out", nil)
 )
 
 var errTerminated = errors.New("terminated")
@@ -75,10 +75,10 @@ type HeaderRetrievalFn func(common.Hash) *types.Header
 type blockRetrievalFn func(common.Hash) *types.Block
 
 // headerRequesterFn is a callback type for sending a header retrieval request.
-type headerRequesterFn func(common.Hash, chan *eth.Response) (*eth.Request, error)
+type headerRequesterFn func(common.Hash, chan *G.Response) (*G.Request, error)
 
 // bodyRequesterFn is a callback type for sending a body retrieval request.
-type bodyRequesterFn func([]common.Hash, chan *eth.Response) (*eth.Request, error)
+type bodyRequesterFn func([]common.Hash, chan *G.Response) (*G.Request, error)
 
 // headerVerifierFn is a callback type to verify a block's header for fast propagation.
 type headerVerifierFn func(header *types.Header) error
@@ -192,9 +192,9 @@ type BlockFetcher struct {
 	// Testing hooks
 	announceChangeHook func(common.Hash, bool)           // Method to call upon adding or deleting a hash from the blockAnnounce list
 	queueChangeHook    func(common.Hash, bool)           // Method to call upon adding or deleting a block from the import queue
-	fetchingHook       func([]common.Hash)               // Method to call upon starting a block (eth/61) or header (eth/62) fetch
-	completingHook     func([]common.Hash)               // Method to call upon starting a block body fetch (eth/62)
-	importedHook       func(*types.Header, *types.Block) // Method to call upon successful header or block import (both eth/61 and eth/62)
+	fetchingHook       func([]common.Hash)               // Method to call upon starting a block (G/61) or header (G/62) fetch
+	completingHook     func([]common.Hash)               // Method to call upon starting a block body fetch (G/62)
+	importedHook       func(*types.Header, *types.Block) // Method to call upon successful header or block import (both G/61 and G/62)
 }
 
 // NewBlockFetcher creates a block fetcher to retrieve blocks based on hash announcements.
@@ -469,7 +469,7 @@ func (f *BlockFetcher) loop() {
 					for _, hash := range hashes {
 						headerFetchMeter.Mark(1)
 						go func(hash common.Hash) {
-							resCh := make(chan *eth.Response)
+							resCh := make(chan *G.Response)
 
 							req, err := fetchHeader(hash, resCh)
 							if err != nil {
@@ -483,7 +483,7 @@ func (f *BlockFetcher) loop() {
 							select {
 							case res := <-resCh:
 								res.Done <- nil
-								f.FilterHeaders(peer, *res.Res.(*eth.BlockHeadersPacket), time.Now().Add(res.Time))
+								f.FilterHeaders(peer, *res.Res.(*G.BlockHeadersPacket), time.Now().Add(res.Time))
 
 							case <-timeout.C:
 								// The peer didn't respond in time. The request
@@ -526,7 +526,7 @@ func (f *BlockFetcher) loop() {
 				bodyFetchMeter.Mark(int64(len(hashes)))
 
 				go func(peer string, hashes []common.Hash) {
-					resCh := make(chan *eth.Response)
+					resCh := make(chan *G.Response)
 
 					req, err := fetchBodies(hashes, resCh)
 					if err != nil {
@@ -541,7 +541,7 @@ func (f *BlockFetcher) loop() {
 					case res := <-resCh:
 						res.Done <- nil
 						// Ignoring withdrawals here, since the block fetcher is not used post-merge.
-						txs, uncles, _ := res.Res.(*eth.BlockBodiesPacket).Unpack()
+						txs, uncles, _ := res.Res.(*G.BlockBodiesPacket).Unpack()
 						f.FilterBodies(peer, txs, uncles, time.Now())
 
 					case <-timeout.C:

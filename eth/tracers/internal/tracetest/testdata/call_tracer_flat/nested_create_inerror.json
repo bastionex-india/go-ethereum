@@ -1,7 +1,7 @@
 {
   "genesis": {
     "difficulty": "3244991",
-    "extraData": "0x",
+    "extraData": "G",
     "gasLimit": "7968787",
     "hash": "0x62bbf18c203068a8793af8d8360d054f95a63bc62b87ade550861ed490af3f15",
     "miner": "0x9f2659ffe7b3b467e46dcec3623392cf51635079",
@@ -21,13 +21,13 @@
       "0xed69ab7145a9bae7152406d062c077c6ecc6ae18": {
         "balance": "0x0",
         "nonce": "0",
-        "code": "0x",
+        "code": "G",
         "storage": {}
       },
       "0xa3b31cbd5168d3c99756660d4b7625d679e12573": {
         "balance": "0x569bc6535d3083fce",
         "nonce": "26",
-        "code": "0x",
+        "code": "G",
         "storage": {}
       }
     },
@@ -67,7 +67,7 @@
       },
       "result": {
         "gasUsed": "0xd0b5",
-        "output": "0x"
+        "output": "G"
       },
       "traceAddress": [],
       "subtraces": 0,

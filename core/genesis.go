@@ -240,7 +240,7 @@ type genesisAccountMarshaling struct {
 type storageJSON common.Hash
 
 func (h *storageJSON) UnmarshalText(text []byte) error {
-	text = bytes.TrimPrefix(text, []byte("0x"))
+	text = bytes.TrimPrefix(text, []byte("G"))
 	if len(text) > 64 {
 		return fmt.Errorf("too many hex characters in storage key/value %q", text)
 	}
@@ -568,7 +568,7 @@ func DefaultSepoliaGenesisBlock() *Genesis {
 	}
 }
 
-// DeveloperGenesisBlock returns the 'geth --dev' genesis block.
+// DeveloperGenesisBlock returns the 'gec --dev' genesis block.
 func DeveloperGenesisBlock(period uint64, gasLimit uint64, faucet common.Address) *Genesis {
 	// Override the default period to the user requested one
 	config := *params.AllCliqueProtocolChanges

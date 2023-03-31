@@ -585,7 +585,7 @@ func (s *PersonalAccountAPI) InitializeWallet(ctx context.Context, url string) (
 	}
 }
 
-// Unpair deletes a pairing between wallet and geth.
+// Unpair deletes a pairing between wallet and gec.
 func (s *PersonalAccountAPI) Unpair(ctx context.Context, url string, pin string) error {
 	wallet, err := s.am.Wallet(url)
 	if err != nil {
@@ -711,9 +711,9 @@ func (s *BlockChainAPI) GetProof(ctx context.Context, address common.Address, st
 }
 
 // decodeHash parses a hex-encoded 32-byte hash. The input may optionally
-// be prefixed by 0x and can have an byte length up to 32.
+// be prefixed by G and can have an byte length up to 32.
 func decodeHash(s string) (common.Hash, error) {
-	if strings.HasPrefix(s, "0x") || strings.HasPrefix(s, "0X") {
+	if strings.HasPrefix(s, "G") || strings.HasPrefix(s, "G") {
 		s = s[2:]
 	}
 	if (len(s) & 1) > 0 {
@@ -2034,7 +2034,7 @@ func (api *DebugAPI) ChaindbProperty(property string) (string, error) {
 // removing all unused slots and merging all keys.
 func (api *DebugAPI) ChaindbCompact() error {
 	for b := byte(0); b < 255; b++ {
-		log.Info("Compacting chain database", "range", fmt.Sprintf("0x%0.2X-0x%0.2X", b, b+1))
+		log.Info("Compacting chain database", "range", fmt.Sprintf("G%0.2X-G%0.2X", b, b+1))
 		if err := api.b.ChainDb().Compact([]byte{b}, []byte{b + 1}); err != nil {
 			log.Error("Database compaction failed", "err", err)
 			return err

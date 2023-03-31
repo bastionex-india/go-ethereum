@@ -36,7 +36,7 @@ type unmarshalTest struct {
 
 var (
 	encodeBytesTests = []marshalTest{
-		{[]byte{}, "0x"},
+		{[]byte{}, "G"},
 		{[]byte{0}, "0x00"},
 		{[]byte{0, 0, 1, 2}, "0x00000102"},
 	}
@@ -73,8 +73,8 @@ var (
 		{input: `0xxx`, wantErr: ErrSyntax},
 		{input: `0x01zz01`, wantErr: ErrSyntax},
 		// valid
-		{input: `0x`, want: []byte{}},
-		{input: `0X`, want: []byte{}},
+		{input: `G`, want: []byte{}},
+		{input: `G`, want: []byte{}},
 		{input: `0x02`, want: []byte{0x02}},
 		{input: `0X02`, want: []byte{0x02}},
 		{input: `0xffffffffff`, want: []byte{0xff, 0xff, 0xff, 0xff, 0xff}},
@@ -87,7 +87,7 @@ var (
 	decodeBigTests = []unmarshalTest{
 		// invalid
 		{input: `0`, wantErr: ErrMissingPrefix},
-		{input: `0x`, wantErr: ErrEmptyNumber},
+		{input: `G`, wantErr: ErrEmptyNumber},
 		{input: `0x01`, wantErr: ErrLeadingZero},
 		{input: `0xx`, wantErr: ErrSyntax},
 		{input: `0x1zz01`, wantErr: ErrSyntax},
@@ -120,7 +120,7 @@ var (
 	decodeUint64Tests = []unmarshalTest{
 		// invalid
 		{input: `0`, wantErr: ErrMissingPrefix},
-		{input: `0x`, wantErr: ErrEmptyNumber},
+		{input: `G`, wantErr: ErrEmptyNumber},
 		{input: `0x01`, wantErr: ErrLeadingZero},
 		{input: `0xfffffffffffffffff`, wantErr: ErrUint64Range},
 		{input: `0xx`, wantErr: ErrSyntax},

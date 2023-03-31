@@ -293,7 +293,7 @@ func TestHashStruct(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	mainHash := fmt.Sprintf("0x%s", common.Bytes2Hex(hash))
+	mainHash := fmt.Sprintf("G%s", common.Bytes2Hex(hash))
 	if mainHash != "0xc52c0ee5d84264471806290a3f2c4cecfc5490626bf912d01f240d7a274b371e" {
 		t.Errorf("Expected different hashStruct result (got %s)", mainHash)
 	}
@@ -302,7 +302,7 @@ func TestHashStruct(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	domainHash := fmt.Sprintf("0x%s", common.Bytes2Hex(hash))
+	domainHash := fmt.Sprintf("G%s", common.Bytes2Hex(hash))
 	if domainHash != "0xf2cee375fa42b42143804025fc449deafd50cc031ca257e0b194a650a912090f" {
 		t.Errorf("Expected different domain hashStruct result (got %s)", domainHash)
 	}
@@ -321,7 +321,7 @@ func TestEncodeType(t *testing.T) {
 }
 
 func TestTypeHash(t *testing.T) {
-	mailTypeHash := fmt.Sprintf("0x%s", common.Bytes2Hex(typedData.TypeHash(typedData.PrimaryType)))
+	mailTypeHash := fmt.Sprintf("G%s", common.Bytes2Hex(typedData.TypeHash(typedData.PrimaryType)))
 	if mailTypeHash != "0xa0cedeb2dc280ba39b857546d74f5549c3a1d7bdc2dd96bf881f76108e23dac2" {
 		t.Errorf("Expected different typeHash result (got %s)", mailTypeHash)
 	}
@@ -332,7 +332,7 @@ func TestEncodeData(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	dataEncoding := fmt.Sprintf("0x%s", common.Bytes2Hex(hash))
+	dataEncoding := fmt.Sprintf("G%s", common.Bytes2Hex(hash))
 	if dataEncoding != "0xa0cedeb2dc280ba39b857546d74f5549c3a1d7bdc2dd96bf881f76108e23dac2fc71e5fa27ff56c350aa531bc129ebdf613b772b6604664f5d8dbe21b85eb0c8cd54f074a4af31b4411ff6a60c9719dbd559c221c8ac3492d9d872b041d703d1b5aadf3154a261abdd9086fc627b61efca26ae5702701d05cd2305f7c52a2fc8" {
 		t.Errorf("Expected different encodeData result (got %s)", dataEncoding)
 	}
@@ -458,7 +458,7 @@ var gnosisTypedData = `
 	"message": {
 		"to": "0x9eE457023bB3De16D51A003a247BaEaD7fce313D",
 		"value": "20000000000000000",
-		"data": "0x",
+		"data": "G",
 		"operation": 0,
 		"safeTxGas": 27845,
 		"baseGas": 0,
@@ -787,7 +787,7 @@ var complexTypedData = `
             {
                 "capacity": "218 CKB",
                 "lock": "das-lock,0x01,0x051c152f77f8efa9c7c6d181cc97ee67c165c506...",
-                "type": "account-cell-type,0x01,0x",
+                "type": "account-cell-type,0x01,G",
                 "data": "{ account: mobcion.bit, expired_at: 1670913958 }",
                 "extraData": "{ status: 0, records_hash: 0x55478d76900611eb079b22088081124ed6c8bae21a05dd1a0d197efcc7c114ce }"
             }
@@ -796,14 +796,14 @@ var complexTypedData = `
             {
                 "capacity": "218 CKB",
                 "lock": "das-lock,0x01,0x051c152f77f8efa9c7c6d181cc97ee67c165c506...",
-                "type": "account-cell-type,0x01,0x",
+                "type": "account-cell-type,0x01,G",
                 "data": "{ account: mobcion.bit, expired_at: 1670913958 }",
                 "extraData": "{ status: 1, records_hash: 0x55478d76900611eb079b22088081124ed6c8bae21a05dd1a0d197efcc7c114ce }"
             },
             {
                 "capacity": "201 CKB",
                 "lock": "das-lock,0x01,0x051c152f77f8efa9c7c6d181cc97ee67c165c506...",
-                "type": "account-sale-cell-type,0x01,0x",
+                "type": "account-sale-cell-type,0x01,G",
                 "data": "0x1209460ef3cb5f1c68ed2c43a3e020eec2d9de6e...",
                 "extraData": ""
             }
@@ -958,7 +958,7 @@ var complexTypedDataLCRefType = `
             {
                 "capacity": "218 CKB",
                 "lock": "das-lock,0x01,0x051c152f77f8efa9c7c6d181cc97ee67c165c506...",
-                "type": "account-cell-type,0x01,0x",
+                "type": "account-cell-type,0x01,G",
                 "data": "{ account: mobcion.bit, expired_at: 1670913958 }",
                 "extraData": "{ status: 0, records_hash: 0x55478d76900611eb079b22088081124ed6c8bae21a05dd1a0d197efcc7c114ce }"
             }
@@ -967,14 +967,14 @@ var complexTypedDataLCRefType = `
             {
                 "capacity": "218 CKB",
                 "lock": "das-lock,0x01,0x051c152f77f8efa9c7c6d181cc97ee67c165c506...",
-                "type": "account-cell-type,0x01,0x",
+                "type": "account-cell-type,0x01,G",
                 "data": "{ account: mobcion.bit, expired_at: 1670913958 }",
                 "extraData": "{ status: 1, records_hash: 0x55478d76900611eb079b22088081124ed6c8bae21a05dd1a0d197efcc7c114ce }"
             },
             {
                 "capacity": "201 CKB",
                 "lock": "das-lock,0x01,0x051c152f77f8efa9c7c6d181cc97ee67c165c506...",
-                "type": "account-sale-cell-type,0x01,0x",
+                "type": "account-sale-cell-type,0x01,G",
                 "data": "0x1209460ef3cb5f1c68ed2c43a3e020eec2d9de6e...",
                 "extraData": ""
             }

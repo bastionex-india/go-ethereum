@@ -40,7 +40,7 @@
       },
       "0x70c9217d814985faef62b124420f8dfbddd96433": {
         "balance": "0x4ef436dcbda6cd4a",
-        "code": "0x",
+        "code": "G",
         "nonce": "1634",
         "storage": {}
       },
@@ -121,7 +121,7 @@
       "blockNumber": 25001,
       "result": {
         "gasUsed": "0x1810b",
-        "output": "0x"
+        "output": "G"
       },
       "subtraces": 2,
       "traceAddress": [],
@@ -157,7 +157,7 @@
       "blockNumber": 0,
       "result": {
         "gasUsed": "0xedb7",
-        "output": "0x"
+        "output": "G"
       },
       "subtraces": 4,
       "traceAddress": [1],
@@ -265,7 +265,7 @@
       "blockNumber": 0,
       "result": {
         "gasUsed": "0xc51c",
-        "output": "0x"
+        "output": "G"
       },
       "subtraces": 12,
       "traceAddress": [1, 3],
@@ -319,7 +319,7 @@
       "blockNumber": 0,
       "result": {
         "gasUsed": "0x5374",
-        "output": "0x"
+        "output": "G"
       },
       "subtraces": 6,
       "traceAddress": [1, 3, 2],
@@ -481,7 +481,7 @@
       "blockNumber": 0,
       "result": {
         "gasUsed": "0x12fa",
-        "output": "0x"
+        "output": "G"
       },
       "subtraces": 1,
       "traceAddress": [1, 3, 5],
@@ -607,7 +607,7 @@
       "blockNumber": 0,
       "result": {
         "gasUsed": "0xebb",
-        "output": "0x"
+        "output": "G"
       },
       "subtraces": 1,
       "traceAddress": [1, 3, 11],

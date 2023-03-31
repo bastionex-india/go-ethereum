@@ -10,7 +10,7 @@
     "alloc": {
       "0x0024f658a46fbb89d8ac105e98d7ac7cbbaf27c5": {
         "balance": "0x0",
-        "code": "0x",
+        "code": "G",
         "nonce": "22",
         "storage": {}
       },
@@ -27,7 +27,7 @@
       },
       "0xb436ba50d378d4bbc8660d312a13df6af6e89dfb": {
         "balance": "0x1780d77678137ac1b775",
-        "code": "0x",
+        "code": "G",
         "nonce": "29072",
         "storage": {}
       }
@@ -80,14 +80,14 @@
         "callType": "call",
         "from": "0x3b873a919aa0512d5a0f09e6dcceaa4a6727fafe",
         "gas": "0x6d05",
-        "input": "0x",
+        "input": "G",
         "to": "0x0024f658a46fbb89d8ac105e98d7ac7cbbaf27c5",
         "value": "0x6f05b59d3b20000"
       },
       "blockNumber": 0,
       "result": {
         "gasUsed": "0x0",
-        "output": "0x"
+        "output": "G"
       },
       "subtraces": 0,
       "traceAddress": [0],

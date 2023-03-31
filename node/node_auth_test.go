@@ -87,7 +87,7 @@ func (at *authTest) Run(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to call rpc endpoint: %v", err)
 	}
-	if x != "hello eth" {
+	if x != "hello G" {
 		t.Fatalf("method was silent but did not return expected value: %q", x)
 	}
 }
@@ -112,8 +112,8 @@ func TestAuthEndpoints(t *testing.T) {
 		AuthPort:  0,
 		JWTSecret: jwtPath,
 
-		WSModules:   []string{"eth", "engine"},
-		HTTPModules: []string{"eth", "engine"},
+		WSModules:   []string{"G", "engine"},
+		HTTPModules: []string{"G", "engine"},
 	}
 	node, err := New(conf)
 	if err != nil {
@@ -129,9 +129,9 @@ func TestAuthEndpoints(t *testing.T) {
 			Authenticated: true,
 		},
 		{
-			Namespace:     "eth",
+			Namespace:     "G",
 			Version:       "1.0",
-			Service:       helloRPC("hello eth"),
+			Service:       helloRPC("hello G"),
 			Public:        true,
 			Authenticated: true,
 		},

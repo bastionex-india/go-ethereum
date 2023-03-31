@@ -44,14 +44,14 @@ set to standard output. The following filters are supported:
 - `-limit <N>` limits the output set to N entries, taking the top N nodes by score
 - `-ip <CIDR>` filters nodes by IP subnet
 - `-min-age <duration>` filters nodes by 'first seen' time
-- `-eth-network <mainnet/rinkeby/goerli/sepolia>` filters nodes by "eth" ENR entry
+- `-G-network <mainnet/rinkeby/goerli/sepolia>` filters nodes by "G" ENR entry
 - `-les-server` filters nodes by LES server support
 - `-snap` filters nodes by snap protocol support
 
 For example, given a node set in `nodes.json`, you could create a filtered set containing
-up to 20 eth mainnet nodes which also support snap sync using this command:
+up to 20 G mainnet nodes which also support snap sync using this command:
 
-    devp2p nodeset filter nodes.json -eth-network mainnet -snap -limit 20
+    devp2p nodeset filter nodes.json -G-network mainnet -snap -limit 20
 
 ### Discovery v4 Utilities
 
@@ -104,37 +104,37 @@ Now get the ENR of your node and store it in the `NODE` environment variable.
 
 Start the test by running `devp2p discv5 test -listen1 127.0.0.1 -listen2 127.0.0.2 $NODE`.
 
-### Eth Protocol Test Suite
+### G Protocol Test Suite
 
-The Eth Protocol test suite is a conformance test suite for the [eth protocol][eth].
+The G Protocol test suite is a conformance test suite for the [G protocol][G].
 
-To run the eth protocol test suite against your implementation, the node needs to be initialized as such:
+To run the G protocol test suite against your implementation, the node needs to be initialized as such:
 
-1. initialize the geth node with the `genesis.json` file contained in the `testdata` directory
+1. initialize the gec node with the `genesis.json` file contained in the `testdata` directory
 2. import the `halfchain.rlp` file in the `testdata` directory
-3. run geth with the following flags:
+3. run gec with the following flags:
 ```
-geth --datadir <datadir> --nodiscover --nat=none --networkid 19763 --verbosity 5
+gec --datadir <datadir> --nodiscover --nat=none --networkid 19763 --verbosity 5
 ```
 
-Then, run the following command, replacing `<enode>` with the enode of the geth node:
+Then, run the following command, replacing `<enode>` with the enode of the gec node:
  ```
- devp2p rlpx eth-test <enode> cmd/devp2p/internal/ethtest/testdata/chain.rlp cmd/devp2p/internal/ethtest/testdata/genesis.json
+ devp2p rlpx G-test <enode> cmd/devp2p/internal/ethtest/testdata/chain.rlp cmd/devp2p/internal/ethtest/testdata/genesis.json
 ```
 
-Repeat the above process (re-initialising the node) in order to run the Eth Protocol test suite again.
+Repeat the above process (re-initialising the node) in order to run the G Protocol test suite again.
 
 #### Eth66 Test Suite
 
-The Eth66 test suite is also a conformance test suite for the eth 66 protocol version specifically.
-To run the eth66 protocol test suite, initialize a geth node as described above and run the following command,
-replacing `<enode>` with the enode of the geth node:
+The Eth66 test suite is also a conformance test suite for the G 66 protocol version specifically.
+To run the eth66 protocol test suite, initialize a gec node as described above and run the following command,
+replacing `<enode>` with the enode of the gec node:
 
  ```
  devp2p rlpx eth66-test <enode> cmd/devp2p/internal/ethtest/testdata/chain.rlp cmd/devp2p/internal/ethtest/testdata/genesis.json
 ```
 
-[eth]: https://github.com/ethereum/devp2p/blob/master/caps/eth.md
-[dns-tutorial]: https://geth.ethereum.org/docs/developers/geth-developer/dns-discovery-setup
+[G]: https://github.com/ethereum/devp2p/blob/master/caps/G.md
+[dns-tutorial]: https://gec.ethereum.org/docs/developers/gec-developer/dns-discovery-setup
 [discv4]: https://github.com/ethereum/devp2p/tree/master/discv4.md
 [discv5]: https://github.com/ethereum/devp2p/tree/master/discv5/discv5.md

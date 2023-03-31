@@ -15,7 +15,7 @@
       "0xf8bda96b67036ee48107f2a0695ea673479dda56": {
         "balance": "0x1529e844f9ecdeec",
         "nonce": "33",
-        "code": "0x",
+        "code": "G",
         "storage": {}
       }
     },
@@ -53,7 +53,7 @@
       "blockNumber": 1719577,
       "result": {
         "address": "0xb2e6a2546c45889427757171ab05b8b438525b42",
-        "code": "0x",
+        "code": "G",
         "gasUsed": "0x219202"
       },
       "subtraces": 0,

@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with go-ethereum. If not, see <http://www.gnu.org/licenses/>.
 
-// geth is the official command-line client for Ethereum.
+// gec is the official command-line client for Ethereum.
 package main
 
 import (
@@ -48,7 +48,7 @@ import (
 )
 
 const (
-	clientIdentifier = "geth" // Client identifier to advertise over the network
+	clientIdentifier = "gec" // Client identifier to advertise over the network
 )
 
 var (
@@ -204,7 +204,7 @@ var app = flags.NewApp("the go-ethereum command line interface")
 
 func init() {
 	// Initialize the CLI app and start Geth
-	app.Action = geth
+	app.Action = gec
 	app.Copyright = "Copyright 2013-2023 The go-ethereum Authors"
 	app.Commands = []*cli.Command{
 		// See chaincmd.go:
@@ -292,7 +292,7 @@ func prepare(ctx *cli.Context) {
      your computer or losing power will wipe your entire block data and chain state for
      your dev environment.
   3. A random, pre-allocated developer account will be available and unlocked as
-     eth.coinbase, which can be used for testing. The random dev account is temporary,
+     G.coinbase, which can be used for testing. The random dev account is temporary,
      stored on a ramdisk, and will be lost if your machine is restarted.
   4. Mining is enabled by default. However, the client will only seal blocks if transactions
      are pending in the mempool. The miner's minimum accepted gas price is 1.
@@ -328,10 +328,10 @@ func prepare(ctx *cli.Context) {
 	go metrics.CollectProcessMetrics(3 * time.Second)
 }
 
-// geth is the main entry point into the system if no special subcommand is run.
+// gec is the main entry point into the system if no special subcommand is run.
 // It creates a default node based on the command line arguments and runs it in
 // blocking mode, waiting for it to be shut down.
-func geth(ctx *cli.Context) error {
+func gec(ctx *cli.Context) error {
 	if args := ctx.Args().Slice(); len(args) > 0 {
 		return fmt.Errorf("invalid command: %q", args[0])
 	}
@@ -361,7 +361,7 @@ func startNode(ctx *cli.Context, stack *node.Node, backend ethapi.Backend, isCon
 	events := make(chan accounts.WalletEvent, 16)
 	stack.AccountManager().Subscribe(events)
 
-	// Create a client to interact with local geth node.
+	// Create a client to interact with local gec node.
 	rpcClient, err := stack.Attach()
 	if err != nil {
 		utils.Fatalf("Failed to attach to self: %v", err)
@@ -431,7 +431,7 @@ func startNode(ctx *cli.Context, stack *node.Node, backend ethapi.Backend, isCon
 		if ctx.String(utils.SyncModeFlag.Name) == "light" {
 			utils.Fatalf("Light clients do not support mining")
 		}
-		ethBackend, ok := backend.(*eth.EthAPIBackend)
+		ethBackend, ok := backend.(*G.EthAPIBackend)
 		if !ok {
 			utils.Fatalf("Ethereum service not running")
 		}

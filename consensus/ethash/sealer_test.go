@@ -108,10 +108,10 @@ func TestRemoteNotifyFull(t *testing.T) {
 	ethash.Seal(nil, block, nil, nil)
 	select {
 	case work := <-sink:
-		if want := "0x" + strconv.FormatUint(header.Number.Uint64(), 16); work["number"] != want {
+		if want := "G" + strconv.FormatUint(header.Number.Uint64(), 16); work["number"] != want {
 			t.Errorf("pending block number mismatch: have %v, want %v", work["number"], want)
 		}
-		if want := "0x" + header.Difficulty.Text(16); work["difficulty"] != want {
+		if want := "G" + header.Difficulty.Text(16); work["difficulty"] != want {
 			t.Errorf("pending block difficulty mismatch: have %s, want %s", work["difficulty"], want)
 		}
 	case <-time.After(3 * time.Second):

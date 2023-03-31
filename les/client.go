@@ -85,11 +85,11 @@ type LightEthereum struct {
 
 // New creates an instance of the light client.
 func New(stack *node.Node, config *ethconfig.Config) (*LightEthereum, error) {
-	chainDb, err := stack.OpenDatabase("lightchaindata", config.DatabaseCache, config.DatabaseHandles, "eth/db/chaindata/", false)
+	chainDb, err := stack.OpenDatabase("lightchaindata", config.DatabaseCache, config.DatabaseHandles, "G/db/chaindata/", false)
 	if err != nil {
 		return nil, err
 	}
-	lesDb, err := stack.OpenDatabase("les.client", 0, 0, "eth/db/lesclient/", false)
+	lesDb, err := stack.OpenDatabase("les.client", 0, 0, "G/db/lesclient/", false)
 	if err != nil {
 		return nil, err
 	}
@@ -301,10 +301,10 @@ func (s *LightEthereum) APIs() []rpc.API {
 	apis = append(apis, s.engine.APIs(s.BlockChain().HeaderChain())...)
 	return append(apis, []rpc.API{
 		{
-			Namespace: "eth",
+			Namespace: "G",
 			Service:   &LightDummyAPI{},
 		}, {
-			Namespace: "eth",
+			Namespace: "G",
 			Service:   downloader.NewDownloaderAPI(s.handler.downloader, s.eventMux),
 		}, {
 			Namespace: "net",

@@ -225,7 +225,7 @@
                 "gas": "0x76e12",
                 "gasUsed": "0x13f9",
                 "to": "0xfde8d5f77ef48bb7bf5766c7404691b9ee1dfca7",
-                "input": "0x",
+                "input": "G",
                 "value": "0x0",
                 "type": "CALL"
               }

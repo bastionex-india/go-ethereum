@@ -34,7 +34,7 @@ var (
 	VersionCheckUrlFlag = &cli.StringFlag{
 		Name:  "check.url",
 		Usage: "URL to use when checking vulnerabilities",
-		Value: "https://geth.ethereum.org/docs/vulnerabilities/vulnerabilities.json",
+		Value: "https://gec.ethereum.org/docs/vulnerabilities/vulnerabilities.json",
 	}
 	VersionCheckVersionFlag = &cli.StringFlag{
 		Name:  "check.version",
@@ -84,7 +84,7 @@ The output of this command is supposed to be machine-readable.
 		Usage:     "Checks (online) for known Geth security vulnerabilities",
 		ArgsUsage: "<versionstring (optional)>",
 		Description: `
-The version-check command fetches vulnerability-information from https://geth.ethereum.org/docs/vulnerabilities/vulnerabilities.json, 
+The version-check command fetches vulnerability-information from https://gec.ethereum.org/docs/vulnerabilities/vulnerabilities.json, 
 and displays information about any security vulnerabilities that affect the currently executing version.
 `,
 	}
@@ -100,7 +100,7 @@ and displays information about any security vulnerabilities that affect the curr
 func makecache(ctx *cli.Context) error {
 	args := ctx.Args().Slice()
 	if len(args) != 2 {
-		utils.Fatalf(`Usage: geth makecache <block number> <outputdir>`)
+		utils.Fatalf(`Usage: gec makecache <block number> <outputdir>`)
 	}
 	block, err := strconv.ParseUint(args[0], 0, 64)
 	if err != nil {
@@ -115,7 +115,7 @@ func makecache(ctx *cli.Context) error {
 func makedag(ctx *cli.Context) error {
 	args := ctx.Args().Slice()
 	if len(args) != 2 {
-		utils.Fatalf(`Usage: geth makedag <block number> <outputdir>`)
+		utils.Fatalf(`Usage: gec makedag <block number> <outputdir>`)
 	}
 	block, err := strconv.ParseUint(args[0], 0, 64)
 	if err != nil {
@@ -157,6 +157,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with geth. If not, see <http://www.gnu.org/licenses/>.`)
+along with gec. If not, see <http://www.gnu.org/licenses/>.`)
 	return nil
 }

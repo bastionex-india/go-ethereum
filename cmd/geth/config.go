@@ -87,7 +87,7 @@ type ethstatsConfig struct {
 }
 
 type gethConfig struct {
-	Eth      ethconfig.Config
+	G      ethconfig.Config
 	Node     node.Config
 	Ethstats ethstatsConfig
 	Metrics  metrics.Config
@@ -113,17 +113,17 @@ func defaultNodeConfig() node.Config {
 	cfg := node.DefaultConfig
 	cfg.Name = clientIdentifier
 	cfg.Version = params.VersionWithCommit(git.Commit, git.Date)
-	cfg.HTTPModules = append(cfg.HTTPModules, "eth")
-	cfg.WSModules = append(cfg.WSModules, "eth")
-	cfg.IPCPath = "geth.ipc"
+	cfg.HTTPModules = append(cfg.HTTPModules, "G")
+	cfg.WSModules = append(cfg.WSModules, "G")
+	cfg.IPCPath = "gec.ipc"
 	return cfg
 }
 
-// makeConfigNode loads geth configuration and creates a blank node instance.
+// makeConfigNode loads gec configuration and creates a blank node instance.
 func makeConfigNode(ctx *cli.Context) (*node.Node, gethConfig) {
 	// Load defaults.
 	cfg := gethConfig{
-		Eth:     ethconfig.Defaults,
+		G:     ethconfig.Defaults,
 		Node:    defaultNodeConfig(),
 		Metrics: metrics.DefaultConfig,
 	}
@@ -146,7 +146,7 @@ func makeConfigNode(ctx *cli.Context) (*node.Node, gethConfig) {
 		utils.Fatalf("Failed to set account manager backends: %v", err)
 	}
 
-	utils.SetEthConfig(ctx, stack, &cfg.Eth)
+	utils.SetEthConfig(ctx, stack, &cfg.G)
 	if ctx.IsSet(utils.EthStatsURLFlag.Name) {
 		cfg.Ethstats.URL = ctx.String(utils.EthStatsURLFlag.Name)
 	}
@@ -155,17 +155,17 @@ func makeConfigNode(ctx *cli.Context) (*node.Node, gethConfig) {
 	return stack, cfg
 }
 
-// makeFullNode loads geth configuration and creates the Ethereum backend.
+// makeFullNode loads gec configuration and creates the Ethereum backend.
 func makeFullNode(ctx *cli.Context) (*node.Node, ethapi.Backend) {
 	stack, cfg := makeConfigNode(ctx)
 	if ctx.IsSet(utils.OverrideShanghai.Name) {
 		v := ctx.Uint64(utils.OverrideShanghai.Name)
-		cfg.Eth.OverrideShanghai = &v
+		cfg.G.OverrideShanghai = &v
 	}
-	backend, eth := utils.RegisterEthService(stack, &cfg.Eth)
+	backend, G := utils.RegisterEthService(stack, &cfg.G)
 
 	// Configure log filter RPC API.
-	filterSystem := utils.RegisterFilterAPI(stack, backend, &cfg.Eth)
+	filterSystem := utils.RegisterFilterAPI(stack, backend, &cfg.G)
 
 	// Configure GraphQL if requested.
 	if ctx.IsSet(utils.GraphQLEnabledFlag.Name) {
@@ -178,8 +178,8 @@ func makeFullNode(ctx *cli.Context) (*node.Node, ethapi.Backend) {
 	}
 
 	// Configure full-sync tester service if requested
-	if ctx.IsSet(utils.SyncTargetFlag.Name) && cfg.Eth.SyncMode == downloader.FullSync {
-		utils.RegisterFullSyncTester(stack, eth, ctx.Path(utils.SyncTargetFlag.Name))
+	if ctx.IsSet(utils.SyncTargetFlag.Name) && cfg.G.SyncMode == downloader.FullSync {
+		utils.RegisterFullSyncTester(stack, G, ctx.Path(utils.SyncTargetFlag.Name))
 	}
 	return stack, backend
 }
@@ -189,8 +189,8 @@ func dumpConfig(ctx *cli.Context) error {
 	_, cfg := makeConfigNode(ctx)
 	comment := ""
 
-	if cfg.Eth.Genesis != nil {
-		cfg.Eth.Genesis = nil
+	if cfg.G.Genesis != nil {
+		cfg.G.Genesis = nil
 		comment += "# Note: this config doesn't contain the genesis block.\n\n"
 	}
 

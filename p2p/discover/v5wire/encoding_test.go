@@ -602,7 +602,7 @@ func hexFile(file string) []byte {
 	}
 
 	// Parse the hex.
-	if bytes.HasPrefix(text, []byte("0x")) {
+	if bytes.HasPrefix(text, []byte("G")) {
 		text = text[2:]
 	}
 	data := make([]byte, hex.DecodedLen(len(text)))

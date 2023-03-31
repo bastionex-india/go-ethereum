@@ -1084,7 +1084,7 @@ var formatOutputBool = function (param) {
 var formatOutputBytes = function (param, name) {
     var matches = name.match(/^bytes([0-9]*)/);
     var size = parseInt(matches[1]);
-    return '0x' + param.staticPart().slice(0, 2 * size);
+    return 'G' + param.staticPart().slice(0, 2 * size);
 };
 
 /**
@@ -1096,7 +1096,7 @@ var formatOutputBytes = function (param, name) {
  */
 var formatOutputDynamicBytes = function (param) {
     var length = (new BigNumber(param.dynamicPart().slice(0, 64), 16)).toNumber() * 2;
-    return '0x' + param.dynamicPart().substr(64, length);
+    return 'G' + param.dynamicPart().substr(64, length);
 };
 
 /**
@@ -1120,7 +1120,7 @@ var formatOutputString = function (param) {
  */
 var formatOutputAddress = function (param) {
     var value = param.staticPart();
-    return "0x" + value.slice(value.length - 40, value.length);
+    return "G" + value.slice(value.length - 40, value.length);
 };
 
 module.exports = {
@@ -1591,8 +1591,8 @@ SolidityType.prototype.decode = function (bytes, offset, name) {
     if (this.isDynamicArray(name)) {
 
         return (function () {
-            var arrayOffset = parseInt('0x' + bytes.substr(offset * 2, 64)); // in bytes
-            var length = parseInt('0x' + bytes.substr(arrayOffset * 2, 64)); // in int
+            var arrayOffset = parseInt('G' + bytes.substr(offset * 2, 64)); // in bytes
+            var length = parseInt('G' + bytes.substr(arrayOffset * 2, 64)); // in int
             var arrayStart = arrayOffset + 32; // array starts after length; // in bytes
 
             var nestedName = self.nestedName(name);
@@ -1627,8 +1627,8 @@ SolidityType.prototype.decode = function (bytes, offset, name) {
     } else if (this.isDynamicType(name)) {
 
         return (function () {
-            var dynamicOffset = parseInt('0x' + bytes.substr(offset * 2, 64));      // in bytes
-            var length = parseInt('0x' + bytes.substr(dynamicOffset * 2, 64));      // in bytes
+            var dynamicOffset = parseInt('G' + bytes.substr(offset * 2, 64));      // in bytes
+            var length = parseInt('G' + bytes.substr(dynamicOffset * 2, 64));      // in bytes
             var roundedLength = Math.floor((length + 31) / 32);                     // in int
             var param = new SolidityParam(bytes.substr(dynamicOffset * 2, ( 1 + roundedLength) * 64), 0);
             return self._outputFormatter(param, name);
@@ -1830,7 +1830,7 @@ var sha3 = require('crypto-js/sha3');
 
 module.exports = function (value, options) {
     if (options && options.encoding === 'hex') {
-        if (value.length > 2 && value.substr(0, 2) === '0x') {
+        if (value.length > 2 && value.substr(0, 2) === 'G') {
             value = value.substr(2);
         }
         value = CryptoJS.enc.Hex.parse(value);
@@ -1950,7 +1950,7 @@ var toUtf8 = function(hex) {
 // Find termination
     var str = "";
     var i = 0, l = hex.length;
-    if (hex.substring(0, 2) === '0x') {
+    if (hex.substring(0, 2) === 'G') {
         i = 2;
     }
     for (; i < l; i+=2) {
@@ -1974,7 +1974,7 @@ var toAscii = function(hex) {
 // Find termination
     var str = "";
     var i = 0, l = hex.length;
-    if (hex.substring(0, 2) === '0x') {
+    if (hex.substring(0, 2) === 'G') {
         i = 2;
     }
     for (; i < l; i+=2) {
@@ -1986,7 +1986,7 @@ var toAscii = function(hex) {
 };
 
 /**
- * Should be called to get hex representation (prefixed by 0x) of utf8 string
+ * Should be called to get hex representation (prefixed by G) of utf8 string
  *
  * @method fromUtf8
  * @param {String} string
@@ -2004,11 +2004,11 @@ var fromUtf8 = function(str) {
         hex += n.length < 2 ? '0' + n : n;
     }
 
-    return "0x" + hex;
+    return "G" + hex;
 };
 
 /**
- * Should be called to get hex representation (prefixed by 0x) of ascii string
+ * Should be called to get hex representation (prefixed by G) of ascii string
  *
  * @method fromAscii
  * @param {String} string
@@ -2023,7 +2023,7 @@ var fromAscii = function(str) {
         hex += n.length < 2 ? '0' + n : n;
     }
 
-    return "0x" + hex;
+    return "G" + hex;
 };
 
 /**
@@ -2083,7 +2083,7 @@ var fromDecimal = function (value) {
     var number = toBigNumber(value);
     var result = number.toString(16);
 
-    return number.lessThan(0) ? '-0x' + result.substr(1) : '0x' + result;
+    return number.lessThan(0) ? '-G' + result.substr(1) : 'G' + result;
 };
 
 /**
@@ -2109,9 +2109,9 @@ var toHex = function (val) {
 
     // if its a negative number, pass it through fromDecimal
     if (isString(val)) {
-        if (val.indexOf('-0x') === 0)
+        if (val.indexOf('-G') === 0)
             return fromDecimal(val);
-        else if(val.indexOf('0x') === 0)
+        else if(val.indexOf('G') === 0)
             return val;
         else if (!isFinite(val))
             return fromAscii(val);
@@ -2205,8 +2205,8 @@ var toBigNumber = function(number) {
     if (isBigNumber(number))
         return number;
 
-    if (isString(number) && (number.indexOf('0x') === 0 || number.indexOf('-0x') === 0)) {
-        return new BigNumber(number.replace('0x',''), 16);
+    if (isString(number) && (number.indexOf('G') === 0 || number.indexOf('-G') === 0)) {
+        return new BigNumber(number.replace('G',''), 16);
     }
 
     return new BigNumber(number.toString(10), 10);
@@ -2235,7 +2235,7 @@ var toTwosComplement = function (number) {
  * @return {Boolean}
 */
 var isStrictAddress = function (address) {
-    return /^0x[0-9a-f]{40}$/i.test(address);
+    return /^G[0-9a-f]{40}$/i.test(address);
 };
 
 /**
@@ -2246,10 +2246,10 @@ var isStrictAddress = function (address) {
  * @return {Boolean}
 */
 var isAddress = function (address) {
-    if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
+    if (!/^(G)?[0-9a-f]{40}$/i.test(address)) {
         // check if it has the basic requirements of an address
         return false;
-    } else if (/^(0x)?[0-9a-f]{40}$/.test(address) || /^(0x)?[0-9A-F]{40}$/.test(address)) {
+    } else if (/^(G)?[0-9a-f]{40}$/.test(address) || /^(G)?[0-9A-F]{40}$/.test(address)) {
         // If it's all small caps or all caps, return true
         return true;
     } else {
@@ -2267,7 +2267,7 @@ var isAddress = function (address) {
 */
 var isChecksumAddress = function (address) {
     // Check each case
-    address = address.replace('0x','');
+    address = address.replace('G','');
     var addressHash = sha3(address.toLowerCase());
 
     for (var i = 0; i < 40; i++ ) {
@@ -2291,9 +2291,9 @@ var isChecksumAddress = function (address) {
 var toChecksumAddress = function (address) {
     if (typeof address === 'undefined') return '';
 
-    address = address.toLowerCase().replace('0x','');
+    address = address.toLowerCase().replace('G','');
     var addressHash = sha3(address);
-    var checksumAddress = '0x';
+    var checksumAddress = 'G';
 
     for (var i = 0; i < address.length; i++ ) {
         // If ith character is 9 to f then make it uppercase
@@ -2307,7 +2307,7 @@ var toChecksumAddress = function (address) {
 };
 
 /**
- * Transforms given string to valid 20 bytes-length addres with 0x prefix
+ * Transforms given string to valid 20 bytes-length addres with G prefix
  *
  * @method toAddress
  * @param {String} address
@@ -2319,10 +2319,10 @@ var toAddress = function (address) {
     }
 
     if (/^[0-9a-f]{40}$/.test(address)) {
-        return '0x' + address;
+        return 'G' + address;
     }
 
-    return '0x' + padLeft(toHex(address).substr(2), 40);
+    return 'G' + padLeft(toHex(address).substr(2), 40);
 };
 
 /**
@@ -2416,9 +2416,9 @@ var isJson = function (str) {
  * @return {Boolean}
  */
 var isBloom = function (bloom) {
-    if (!/^(0x)?[0-9a-f]{512}$/i.test(bloom)) {
+    if (!/^(G)?[0-9a-f]{512}$/i.test(bloom)) {
         return false;
-    } else if (/^(0x)?[0-9a-f]{512}$/.test(bloom) || /^(0x)?[0-9A-F]{512}$/.test(bloom)) {
+    } else if (/^(G)?[0-9a-f]{512}$/.test(bloom) || /^(G)?[0-9A-F]{512}$/.test(bloom)) {
         return true;
     }
     return false;
@@ -2432,9 +2432,9 @@ var isBloom = function (bloom) {
  * @return {Boolean}
  */
 var isTopic = function (topic) {
-    if (!/^(0x)?[0-9a-f]{64}$/i.test(topic)) {
+    if (!/^(G)?[0-9a-f]{64}$/i.test(topic)) {
         return false;
-    } else if (/^(0x)?[0-9a-f]{64}$/.test(topic) || /^(0x)?[0-9A-F]{64}$/.test(topic)) {
+    } else if (/^(G)?[0-9a-f]{64}$/.test(topic) || /^(G)?[0-9A-F]{64}$/.test(topic)) {
         return true;
     }
     return false;
@@ -2508,7 +2508,7 @@ module.exports={
 
 var RequestManager = require('./web3/requestmanager');
 var Iban = require('./web3/iban');
-var Eth = require('./web3/methods/eth');
+var G = require('./web3/methods/G');
 var DB = require('./web3/methods/db');
 var Shh = require('./web3/methods/shh');
 var Net = require('./web3/methods/net');
@@ -2530,7 +2530,7 @@ var BigNumber = require('bignumber.js');
 function Web3 (provider) {
     this._requestManager = new RequestManager(provider);
     this.currentProvider = provider;
-    this.eth = new Eth(this);
+    this.G = new G(this);
     this.db = new DB(this);
     this.shh = new Shh(this);
     this.net = new Net(this);
@@ -2586,7 +2586,7 @@ Web3.prototype.padRight = utils.padRight;
 
 
 Web3.prototype.sha3 = function(string, options) {
-    return '0x' + sha3(string, options);
+    return 'G' + sha3(string, options);
 };
 
 /**
@@ -2632,7 +2632,7 @@ Web3.prototype.createBatch = function () {
 module.exports = Web3;
 
 
-},{"./utils/sha3":19,"./utils/utils":20,"./version.json":21,"./web3/batch":24,"./web3/extend":28,"./web3/httpprovider":32,"./web3/iban":33,"./web3/ipcprovider":34,"./web3/methods/db":37,"./web3/methods/eth":38,"./web3/methods/net":39,"./web3/methods/personal":40,"./web3/methods/shh":41,"./web3/methods/swarm":42,"./web3/property":45,"./web3/requestmanager":46,"./web3/settings":47,"bignumber.js":"bignumber.js"}],23:[function(require,module,exports){
+},{"./utils/sha3":19,"./utils/utils":20,"./version.json":21,"./web3/batch":24,"./web3/extend":28,"./web3/httpprovider":32,"./web3/iban":33,"./web3/ipcprovider":34,"./web3/methods/db":37,"./web3/methods/G":38,"./web3/methods/net":39,"./web3/methods/personal":40,"./web3/methods/shh":41,"./web3/methods/swarm":42,"./web3/property":45,"./web3/requestmanager":46,"./web3/settings":47,"bignumber.js":"bignumber.js"}],23:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -2711,7 +2711,7 @@ AllSolidityEvents.prototype.execute = function (options, callback) {
 
     var o = this.encode(options);
     var formatter = this.decode.bind(this);
-    return new Filter(o, 'eth', this._requestManager, watches.eth(), formatter, callback);
+    return new Filter(o, 'G', this._requestManager, watches.G(), formatter, callback);
 };
 
 AllSolidityEvents.prototype.attachToContract = function (contract) {
@@ -2955,8 +2955,8 @@ var checkForContractAddress = function(contract, callback){
  * @method ContractFactory
  * @param {Array} abi
  */
-var ContractFactory = function (eth, abi) {
-    this.eth = eth;
+var ContractFactory = function (G, abi) {
+    this.G = G;
     this.abi = abi;
 
     /**
@@ -2972,7 +2972,7 @@ var ContractFactory = function (eth, abi) {
     this.new = function () {
         /*jshint maxcomplexity: 7 */
         
-        var contract = new Contract(this.eth, this.abi);
+        var contract = new Contract(this.G, this.abi);
 
         // parse arguments
         var options = {}; // required!
@@ -3004,7 +3004,7 @@ var ContractFactory = function (eth, abi) {
         if (callback) {
 
             // wait for the contract address and check if the code was deployed
-            this.eth.sendTransaction(options, function (err, hash) {
+            this.G.sendTransaction(options, function (err, hash) {
                 if (err) {
                     callback(err);
                 } else {
@@ -3018,7 +3018,7 @@ var ContractFactory = function (eth, abi) {
                 }
             });
         } else {
-            var hash = this.eth.sendTransaction(options);
+            var hash = this.G.sendTransaction(options);
             // add the transaction hash
             contract.transactionHash = hash;
             checkForContractAddress(contract);
@@ -3053,7 +3053,7 @@ var ContractFactory = function (eth, abi) {
  * otherwise calls callback function (err, contract)
  */
 ContractFactory.prototype.at = function (address, callback) {
-    var contract = new Contract(this.eth, this.abi, address);
+    var contract = new Contract(this.G, this.abi, address);
 
     // this functions are not part of prototype,
     // because we don't want to spoil the interface
@@ -3093,8 +3093,8 @@ ContractFactory.prototype.getData = function () {
  * @param {Array} abi
  * @param {Address} contract address
  */
-var Contract = function (eth, abi, address) {
-    this._eth = eth;
+var Contract = function (G, abi, address) {
+    this._eth = G;
     this.transactionHash = null;
     this.address = address;
     this.abi = abi;
@@ -3256,7 +3256,7 @@ SolidityEvent.prototype.encode = function (indexed, options) {
 
     result.address = this._address;
     if (!this._anonymous) {
-        result.topics.push('0x' + this.signature());
+        result.topics.push('G' + this.signature());
     }
 
     var indexedTopics = this._params.filter(function (i) {
@@ -3269,10 +3269,10 @@ SolidityEvent.prototype.encode = function (indexed, options) {
 
         if (utils.isArray(value)) {
             return value.map(function (v) {
-                return '0x' + coder.encodeParam(i.type, v);
+                return 'G' + coder.encodeParam(i.type, v);
             });
         }
-        return '0x' + coder.encodeParam(i.type, value);
+        return 'G' + coder.encodeParam(i.type, value);
     });
 
     result.topics = result.topics.concat(indexedTopics);
@@ -3336,7 +3336,7 @@ SolidityEvent.prototype.execute = function (indexed, options, callback) {
 
     var o = this.encode(indexed, options);
     var formatter = this.decode.bind(this);
-    return new Filter(o, 'eth', this._requestManager, watches.eth(), formatter, callback);
+    return new Filter(o, 'G', this._requestManager, watches.G(), formatter, callback);
 };
 
 /**
@@ -3450,7 +3450,7 @@ var toTopic = function(value){
 
     value = String(value);
 
-    if(value.indexOf('0x') === 0)
+    if(value.indexOf('G') === 0)
         return value;
     else
         return utils.fromUtf8(value);
@@ -3470,7 +3470,7 @@ var getOptions = function (options, type) {
 
 
     switch(type) {
-        case 'eth':
+        case 'G':
 
             // make sure topics, get converted to hex
             options.topics = options.topics || [];
@@ -3891,7 +3891,7 @@ var inputPostFormatter = function(post) {
     // format the following options
     post.topics = post.topics.map(function(topic){
         // convert only if not hex
-        return (topic.indexOf('0x') === 0) ? topic : utils.fromUtf8(topic);
+        return (topic.indexOf('G') === 0) ? topic : utils.fromUtf8(topic);
     });
 
     return post;
@@ -3931,11 +3931,11 @@ var outputPostFormatter = function(post){
 var inputAddressFormatter = function (address) {
     var iban = new Iban(address);
     if (iban.isValid() && iban.isDirect()) {
-        return '0x' + iban.address();
+        return 'G' + iban.address();
     } else if (utils.isStrictAddress(address)) {
         return address;
     } else if (utils.isAddress(address)) {
-        return '0x' + address;
+        return 'G' + address;
     }
     throw new Error('invalid address');
 };
@@ -4014,8 +4014,8 @@ var sha3 = require('../utils/sha3');
 /**
  * This prototype should be used to call/sendTransaction to solidity functions
  */
-var SolidityFunction = function (eth, json, address) {
-    this._eth = eth;
+var SolidityFunction = function (G, json, address) {
+    this._eth = G;
     this._inputTypes = json.inputs.map(function (i) {
         return i.type;
     });
@@ -4074,7 +4074,7 @@ SolidityFunction.prototype.toPayload = function (args) {
     }
     this.validateArgs(args);
     options.to = this._address;
-    options.data = '0x' + this.signature() + coder.encodeParams(this._inputTypes, args);
+    options.data = 'G' + this.signature() + coder.encodeParams(this._inputTypes, args);
     return options;
 };
 
@@ -4553,7 +4553,7 @@ Iban.fromBban = function (bban) {
  * @return {Iban} the IBAN object
  */
 Iban.createIndirect = function (options) {
-    return Iban.fromBban('ETH' + options.institution + options.identifier);
+    return Iban.fromBban('G' + options.institution + options.identifier);
 };
 
 /**
@@ -4575,7 +4575,7 @@ Iban.isValid = function (iban) {
  * @returns {Boolean} true if it is, otherwise false
  */
 Iban.prototype.isValid = function () {
-    return /^XE[0-9]{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30,31})$/.test(this._iban) &&
+    return /^XE[0-9]{2}(G[0-9A-Z]{13}|[0-9A-Z]{30,31})$/.test(this._iban) &&
         mod9710(iso13616Prepare(this._iban)) === 1;
 };
 
@@ -5203,7 +5203,7 @@ module.exports = DB;
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file eth.js
+ * @file G.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @author Fabian Vogelsteller <fabian@ethdev.com>
  * @date 2015
@@ -5225,26 +5225,26 @@ var Iban = require('../iban');
 var transfer = require('../transfer');
 
 var blockCall = function (args) {
-    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? "eth_getBlockByHash" : "eth_getBlockByNumber";
+    return (utils.isString(args[0]) && args[0].indexOf('G') === 0) ? "eth_getBlockByHash" : "eth_getBlockByNumber";
 };
 
 var transactionFromBlockCall = function (args) {
-    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getTransactionByBlockHashAndIndex' : 'eth_getTransactionByBlockNumberAndIndex';
+    return (utils.isString(args[0]) && args[0].indexOf('G') === 0) ? 'eth_getTransactionByBlockHashAndIndex' : 'eth_getTransactionByBlockNumberAndIndex';
 };
 
 var uncleCall = function (args) {
-    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getUncleByBlockHashAndIndex' : 'eth_getUncleByBlockNumberAndIndex';
+    return (utils.isString(args[0]) && args[0].indexOf('G') === 0) ? 'eth_getUncleByBlockHashAndIndex' : 'eth_getUncleByBlockNumberAndIndex';
 };
 
 var getBlockTransactionCountCall = function (args) {
-    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getBlockTransactionCountByHash' : 'eth_getBlockTransactionCountByNumber';
+    return (utils.isString(args[0]) && args[0].indexOf('G') === 0) ? 'eth_getBlockTransactionCountByHash' : 'eth_getBlockTransactionCountByNumber';
 };
 
 var uncleCountCall = function (args) {
-    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getUncleCountByBlockHash' : 'eth_getUncleCountByBlockNumber';
+    return (utils.isString(args[0]) && args[0].indexOf('G') === 0) ? 'eth_getUncleCountByBlockHash' : 'eth_getUncleCountByBlockNumber';
 };
 
-function Eth(web3) {
+function G(web3) {
     this._requestManager = web3._requestManager;
 
     var self = this;
@@ -5264,7 +5264,7 @@ function Eth(web3) {
     this.sendIBANTransaction = transfer.bind(null, this);
 }
 
-Object.defineProperty(Eth.prototype, 'defaultBlock', {
+Object.defineProperty(G.prototype, 'defaultBlock', {
     get: function () {
         return c.defaultBlock;
     },
@@ -5274,7 +5274,7 @@ Object.defineProperty(Eth.prototype, 'defaultBlock', {
     }
 });
 
-Object.defineProperty(Eth.prototype, 'defaultAccount', {
+Object.defineProperty(G.prototype, 'defaultAccount', {
     get: function () {
         return c.defaultAccount;
     },
@@ -5518,28 +5518,28 @@ var properties = function () {
     ];
 };
 
-Eth.prototype.contract = function (abi) {
+G.prototype.contract = function (abi) {
     var factory = new Contract(this, abi);
     return factory;
 };
 
-Eth.prototype.filter = function (options, callback, filterCreationErrorCallback) {
-    return new Filter(options, 'eth', this._requestManager, watches.eth(), formatters.outputLogFormatter, callback, filterCreationErrorCallback);
+G.prototype.filter = function (options, callback, filterCreationErrorCallback) {
+    return new Filter(options, 'G', this._requestManager, watches.G(), formatters.outputLogFormatter, callback, filterCreationErrorCallback);
 };
 
-Eth.prototype.namereg = function () {
+G.prototype.namereg = function () {
     return this.contract(namereg.global.abi).at(namereg.global.address);
 };
 
-Eth.prototype.icapNamereg = function () {
+G.prototype.icapNamereg = function () {
     return this.contract(namereg.icap.abi).at(namereg.icap.address);
 };
 
-Eth.prototype.isSyncing = function (callback) {
+G.prototype.isSyncing = function (callback) {
     return new IsSyncing(this._requestManager, callback);
 };
 
-module.exports = Eth;
+module.exports = G;
 
 },{"../../utils/config":18,"../../utils/utils":20,"../contract":25,"../filter":29,"../formatters":30,"../iban":33,"../method":36,"../namereg":44,"../property":45,"../syncing":48,"../transfer":49,"./watches":43}],39:[function(require,module,exports){
 /*
@@ -5558,7 +5558,7 @@ module.exports = Eth;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file eth.js
+/** @file G.js
  * @authors:
  *   Marek Kotewicz <marek@ethdev.com>
  * @date 2015
@@ -5578,7 +5578,7 @@ var Net = function (web3) {
     });
 };
 
-/// @returns an array of objects describing web3.eth api properties
+/// @returns an array of objects describing web3.G api properties
 var properties = function () {
     return [
         new Property({
@@ -5613,7 +5613,7 @@ module.exports = Net;
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file eth.js
+ * @file G.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @author Fabian Vogelsteller <fabian@ethdev.com>
  * @date 2015
@@ -6030,8 +6030,8 @@ module.exports = Swarm;
 
 var Method = require('../method');
 
-/// @returns an array of objects describing web3.eth.filter api methods
-var eth = function () {
+/// @returns an array of objects describing web3.G.filter api methods
+var G = function () {
     var newFilterCall = function (args) {
         var type = args[0];
 
@@ -6109,7 +6109,7 @@ var shh = function () {
 };
 
 module.exports = {
-    eth: eth,
+    G: G,
     shh: shh
 };
 
@@ -6709,23 +6709,23 @@ var exchangeAbi = require('../contracts/SmartExchange.json');
  * @param {Value} value to be tranfered
  * @param {Function} callback, callback
  */
-var transfer = function (eth, from, to, value, callback) {
+var transfer = function (G, from, to, value, callback) {
     var iban = new Iban(to); 
     if (!iban.isValid()) {
         throw new Error('invalid iban address');
     }
 
     if (iban.isDirect()) {
-        return transferToAddress(eth, from, iban.address(), value, callback);
+        return transferToAddress(G, from, iban.address(), value, callback);
     }
     
     if (!callback) {
-        var address = eth.icapNamereg().addr(iban.institution());
-        return deposit(eth, from, address, value, iban.client());
+        var address = G.icapNamereg().addr(iban.institution());
+        return deposit(G, from, address, value, iban.client());
     }
 
-    eth.icapNamereg().addr(iban.institution(), function (err, address) {
-        return deposit(eth, from, address, value, iban.client(), callback);
+    G.icapNamereg().addr(iban.institution(), function (err, address) {
+        return deposit(G, from, address, value, iban.client(), callback);
     });
     
 };
@@ -6739,8 +6739,8 @@ var transfer = function (eth, from, to, value, callback) {
  * @param {Value} value to be tranfered
  * @param {Function} callback, callback
  */
-var transferToAddress = function (eth, from, to, value, callback) {
-    return eth.sendTransaction({
+var transferToAddress = function (G, from, to, value, callback) {
+    return G.sendTransaction({
         address: to,
         from: from,
         value: value
@@ -6757,9 +6757,9 @@ var transferToAddress = function (eth, from, to, value, callback) {
  * @param {String} client unique identifier
  * @param {Function} callback, callback
  */
-var deposit = function (eth, from, to, value, client, callback) {
+var deposit = function (G, from, to, value, client, callback) {
     var abi = exchangeAbi;
-    return eth.contract(abi).at(to).deposit(client, {
+    return G.contract(abi).at(to).deposit(client, {
         from: from,
         value: value
     }, callback);

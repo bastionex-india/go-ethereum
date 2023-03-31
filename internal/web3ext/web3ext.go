@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
 
-// package web3ext contains geth specific web3.js extensions.
+// package web3ext contains gec specific web3.js extensions.
 package web3ext
 
 var Modules = map[string]string{
@@ -22,7 +22,7 @@ var Modules = map[string]string{
 	"clique":   CliqueJs,
 	"ethash":   EthashJs,
 	"debug":    DebugJs,
-	"eth":      EthJs,
+	"G":      EthJs,
 	"miner":    MinerJs,
 	"net":      NetJs,
 	"personal": PersonalJs,
@@ -502,7 +502,7 @@ web3._extend({
 
 const EthJs = `
 web3._extend({
-	property: 'eth',
+	property: 'G',
 	methods: [
 		new web3._extend.Method({
 			name: 'chainId',
@@ -577,7 +577,7 @@ web3._extend({
 		new web3._extend.Method({
 			name: 'getRawTransactionFromBlock',
 			call: function(args) {
-				return (web3._extend.utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getRawTransactionByBlockHashAndIndex' : 'eth_getRawTransactionByBlockNumberAndIndex';
+				return (web3._extend.utils.isString(args[0]) && args[0].indexOf('G') === 0) ? 'eth_getRawTransactionByBlockHashAndIndex' : 'eth_getRawTransactionByBlockNumberAndIndex';
 			},
 			params: 2,
 			inputFormatter: [web3._extend.formatters.inputBlockNumberFormatter, web3._extend.utils.toHex]

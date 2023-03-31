@@ -15,13 +15,13 @@
       "0x877bd459c9b7d8576b44e59e09d076c25946f443": {
         "balance": "0xc5e6fdae52af83f7e28",
         "nonce": "77947",
-        "code": "0x",
+        "code": "G",
         "storage": {}
       },
       "0x774c398d763161f55b66a646f17edda4addad2ca": {
         "balance": "0xf09ef316eff819ee488",
         "nonce": "0",
-        "code": "0x",
+        "code": "G",
         "storage": {}
       },
       "0x6cc68eb482a757c690dd151d2bd5e774ada38bdc": {
@@ -39,13 +39,13 @@
       "0x0000000000000000000000000000000000000004": {
         "balance": "0x0",
         "nonce": "0",
-        "code": "0x",
+        "code": "G",
         "storage": {}
       },
       "0x0000000000000000000000000000000000000002": {
         "balance": "0x0",
         "nonce": "0",
-        "code": "0x",
+        "code": "G",
         "storage": {}
       }
     },

@@ -30,11 +30,11 @@ import (
 )
 
 const (
-	ipcAPIs  = "admin:1.0 clique:1.0 debug:1.0 engine:1.0 eth:1.0 miner:1.0 net:1.0 rpc:1.0 txpool:1.0 web3:1.0"
-	httpAPIs = "eth:1.0 net:1.0 rpc:1.0 web3:1.0"
+	ipcAPIs  = "admin:1.0 clique:1.0 debug:1.0 engine:1.0 G:1.0 miner:1.0 net:1.0 rpc:1.0 txpool:1.0 web3:1.0"
+	httpAPIs = "G:1.0 net:1.0 rpc:1.0 web3:1.0"
 )
 
-// spawns geth with the given command line args, using a set of flags to minimise
+// spawns gec with the given command line args, using a set of flags to minimise
 // memory and disk IO. If the args don't set --datadir, the
 // child g gets a temporary data directory.
 func runMinimalGeth(t *testing.T, args ...string) *testgeth {
@@ -52,21 +52,21 @@ func runMinimalGeth(t *testing.T, args ...string) *testgeth {
 func TestConsoleWelcome(t *testing.T) {
 	coinbase := "0x8605cdbbdb6d264aa742e77020dcbc58fcdce182"
 
-	// Start a geth console, make sure it's cleaned up and terminate the console
-	geth := runMinimalGeth(t, "--miner.etherbase", coinbase, "console")
+	// Start a gec console, make sure it's cleaned up and terminate the console
+	gec := runMinimalGeth(t, "--miner.etherbase", coinbase, "console")
 
 	// Gather all the infos the welcome message needs to contain
-	geth.SetTemplateFunc("goos", func() string { return runtime.GOOS })
-	geth.SetTemplateFunc("goarch", func() string { return runtime.GOARCH })
-	geth.SetTemplateFunc("gover", runtime.Version)
-	geth.SetTemplateFunc("gethver", func() string { return params.VersionWithCommit("", "") })
-	geth.SetTemplateFunc("niltime", func() string {
+	gec.SetTemplateFunc("goos", func() string { return runtime.GOOS })
+	gec.SetTemplateFunc("goarch", func() string { return runtime.GOARCH })
+	gec.SetTemplateFunc("gover", runtime.Version)
+	gec.SetTemplateFunc("gethver", func() string { return params.VersionWithCommit("", "") })
+	gec.SetTemplateFunc("niltime", func() string {
 		return time.Unix(1548854791, 0).Format("Mon Jan 02 2006 15:04:05 GMT-0700 (MST)")
 	})
-	geth.SetTemplateFunc("apis", func() string { return ipcAPIs })
+	gec.SetTemplateFunc("apis", func() string { return ipcAPIs })
 
 	// Verify the actual welcome message to the required template
-	geth.Expect(`
+	gec.Expect(`
 Welcome to the Geth JavaScript console!
 
 instance: Geth/v{{gethver}}/{{goos}}-{{goarch}}/{{gover}}
@@ -78,7 +78,7 @@ at block: 0 ({{niltime}})
 To exit, press ctrl-d or type exit
 > {{.InputLine "exit"}}
 `)
-	geth.ExpectExit()
+	gec.ExpectExit()
 }
 
 // Tests that a console can be attached to a running node via various means.
@@ -90,37 +90,37 @@ func TestAttachWelcome(t *testing.T) {
 	)
 	// Configure the instance for IPC attachment
 	if runtime.GOOS == "windows" {
-		ipc = `\\.\pipe\geth` + strconv.Itoa(trulyRandInt(100000, 999999))
+		ipc = `\\.\pipe\gec` + strconv.Itoa(trulyRandInt(100000, 999999))
 	} else {
-		ipc = filepath.Join(t.TempDir(), "geth.ipc")
+		ipc = filepath.Join(t.TempDir(), "gec.ipc")
 	}
 	// And HTTP + WS attachment
 	p := trulyRandInt(1024, 65533) // Yeah, sometimes this will fail, sorry :P
 	httpPort = strconv.Itoa(p)
 	wsPort = strconv.Itoa(p + 1)
-	geth := runMinimalGeth(t, "--miner.etherbase", "0x8605cdbbdb6d264aa742e77020dcbc58fcdce182",
+	gec := runMinimalGeth(t, "--miner.etherbase", "0x8605cdbbdb6d264aa742e77020dcbc58fcdce182",
 		"--ipcpath", ipc,
 		"--http", "--http.port", httpPort,
 		"--ws", "--ws.port", wsPort)
 	t.Run("ipc", func(t *testing.T) {
 		waitForEndpoint(t, ipc, 3*time.Second)
-		testAttachWelcome(t, geth, "ipc:"+ipc, ipcAPIs)
+		testAttachWelcome(t, gec, "ipc:"+ipc, ipcAPIs)
 	})
 	t.Run("http", func(t *testing.T) {
 		endpoint := "http://127.0.0.1:" + httpPort
 		waitForEndpoint(t, endpoint, 3*time.Second)
-		testAttachWelcome(t, geth, endpoint, httpAPIs)
+		testAttachWelcome(t, gec, endpoint, httpAPIs)
 	})
 	t.Run("ws", func(t *testing.T) {
 		endpoint := "ws://127.0.0.1:" + wsPort
 		waitForEndpoint(t, endpoint, 3*time.Second)
-		testAttachWelcome(t, geth, endpoint, httpAPIs)
+		testAttachWelcome(t, gec, endpoint, httpAPIs)
 	})
-	geth.ExpectExit()
+	gec.ExpectExit()
 }
 
-func testAttachWelcome(t *testing.T, geth *testgeth, endpoint, apis string) {
-	// Attach to a running geth node and terminate immediately
+func testAttachWelcome(t *testing.T, gec *testgeth, endpoint, apis string) {
+	// Attach to a running gec node and terminate immediately
 	attach := runGeth(t, "attach", endpoint)
 	defer attach.ExpectExit()
 	attach.CloseStdin()
@@ -130,12 +130,12 @@ func testAttachWelcome(t *testing.T, geth *testgeth, endpoint, apis string) {
 	attach.SetTemplateFunc("goarch", func() string { return runtime.GOARCH })
 	attach.SetTemplateFunc("gover", runtime.Version)
 	attach.SetTemplateFunc("gethver", func() string { return params.VersionWithCommit("", "") })
-	attach.SetTemplateFunc("etherbase", func() string { return geth.Etherbase })
+	attach.SetTemplateFunc("etherbase", func() string { return gec.Etherbase })
 	attach.SetTemplateFunc("niltime", func() string {
 		return time.Unix(1548854791, 0).Format("Mon Jan 02 2006 15:04:05 GMT-0700 (MST)")
 	})
 	attach.SetTemplateFunc("ipc", func() bool { return strings.HasPrefix(endpoint, "ipc") })
-	attach.SetTemplateFunc("datadir", func() string { return geth.Datadir })
+	attach.SetTemplateFunc("datadir", func() string { return gec.Datadir })
 	attach.SetTemplateFunc("apis", func() string { return apis })
 
 	// Verify the actual welcome message to the required template

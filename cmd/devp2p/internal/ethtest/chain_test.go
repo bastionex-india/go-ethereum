@@ -22,13 +22,13 @@ import (
 	"testing"
 
 	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/eth/protocols/eth"
+	"github.com/ethereum/go-ethereum/G/protocols/G"
 	"github.com/ethereum/go-ethereum/p2p"
 	"github.com/stretchr/testify/assert"
 )
 
 // TestEthProtocolNegotiation tests whether the test suite
-// can negotiate the highest eth protocol in a status message exchange
+// can negotiate the highest G protocol in a status message exchange
 func TestEthProtocolNegotiation(t *testing.T) {
 	var tests = []struct {
 		conn     *Conn
@@ -40,9 +40,9 @@ func TestEthProtocolNegotiation(t *testing.T) {
 				ourHighestProtoVersion: 65,
 			},
 			caps: []p2p.Cap{
-				{Name: "eth", Version: 63},
-				{Name: "eth", Version: 64},
-				{Name: "eth", Version: 65},
+				{Name: "G", Version: 63},
+				{Name: "G", Version: 64},
+				{Name: "G", Version: 65},
 			},
 			expected: uint32(65),
 		},
@@ -51,9 +51,9 @@ func TestEthProtocolNegotiation(t *testing.T) {
 				ourHighestProtoVersion: 65,
 			},
 			caps: []p2p.Cap{
-				{Name: "eth", Version: 63},
-				{Name: "eth", Version: 64},
-				{Name: "eth", Version: 65},
+				{Name: "G", Version: 63},
+				{Name: "G", Version: 64},
+				{Name: "G", Version: 65},
 			},
 			expected: uint32(65),
 		},
@@ -62,9 +62,9 @@ func TestEthProtocolNegotiation(t *testing.T) {
 				ourHighestProtoVersion: 65,
 			},
 			caps: []p2p.Cap{
-				{Name: "eth", Version: 63},
-				{Name: "eth", Version: 64},
-				{Name: "eth", Version: 65},
+				{Name: "G", Version: 63},
+				{Name: "G", Version: 64},
+				{Name: "G", Version: 65},
 			},
 			expected: uint32(65),
 		},
@@ -73,9 +73,9 @@ func TestEthProtocolNegotiation(t *testing.T) {
 				ourHighestProtoVersion: 64,
 			},
 			caps: []p2p.Cap{
-				{Name: "eth", Version: 63},
-				{Name: "eth", Version: 64},
-				{Name: "eth", Version: 65},
+				{Name: "G", Version: 63},
+				{Name: "G", Version: 64},
+				{Name: "G", Version: 65},
 			},
 			expected: 64,
 		},
@@ -84,9 +84,9 @@ func TestEthProtocolNegotiation(t *testing.T) {
 				ourHighestProtoVersion: 65,
 			},
 			caps: []p2p.Cap{
-				{Name: "eth", Version: 0},
-				{Name: "eth", Version: 89},
-				{Name: "eth", Version: 65},
+				{Name: "G", Version: 0},
+				{Name: "G", Version: 89},
+				{Name: "G", Version: 65},
 			},
 			expected: uint32(65),
 		},
@@ -95,8 +95,8 @@ func TestEthProtocolNegotiation(t *testing.T) {
 				ourHighestProtoVersion: 64,
 			},
 			caps: []p2p.Cap{
-				{Name: "eth", Version: 63},
-				{Name: "eth", Version: 64},
+				{Name: "G", Version: 63},
+				{Name: "G", Version: 64},
 				{Name: "wrongProto", Version: 65},
 			},
 			expected: uint32(64),
@@ -106,8 +106,8 @@ func TestEthProtocolNegotiation(t *testing.T) {
 				ourHighestProtoVersion: 65,
 			},
 			caps: []p2p.Cap{
-				{Name: "eth", Version: 63},
-				{Name: "eth", Version: 64},
+				{Name: "G", Version: 63},
+				{Name: "G", Version: 64},
 				{Name: "wrongProto", Version: 65},
 			},
 			expected: uint32(64),
@@ -145,8 +145,8 @@ func TestChain_GetHeaders(t *testing.T) {
 	}{
 		{
 			req: GetBlockHeaders{
-				GetBlockHeadersPacket: &eth.GetBlockHeadersPacket{
-					Origin:  eth.HashOrNumber{Number: uint64(2)},
+				GetBlockHeadersPacket: &G.GetBlockHeadersPacket{
+					Origin:  G.HashOrNumber{Number: uint64(2)},
 					Amount:  uint64(5),
 					Skip:    1,
 					Reverse: false,
@@ -162,8 +162,8 @@ func TestChain_GetHeaders(t *testing.T) {
 		},
 		{
 			req: GetBlockHeaders{
-				GetBlockHeadersPacket: &eth.GetBlockHeadersPacket{
-					Origin:  eth.HashOrNumber{Number: uint64(chain.Len() - 1)},
+				GetBlockHeadersPacket: &G.GetBlockHeadersPacket{
+					Origin:  G.HashOrNumber{Number: uint64(chain.Len() - 1)},
 					Amount:  uint64(3),
 					Skip:    0,
 					Reverse: true,
@@ -177,8 +177,8 @@ func TestChain_GetHeaders(t *testing.T) {
 		},
 		{
 			req: GetBlockHeaders{
-				GetBlockHeadersPacket: &eth.GetBlockHeadersPacket{
-					Origin:  eth.HashOrNumber{Hash: chain.Head().Hash()},
+				GetBlockHeadersPacket: &G.GetBlockHeadersPacket{
+					Origin:  G.HashOrNumber{Hash: chain.Head().Hash()},
 					Amount:  uint64(1),
 					Skip:    0,
 					Reverse: false,

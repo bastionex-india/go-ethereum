@@ -707,7 +707,7 @@
             "gas": "0x3164e1",
             "gasUsed": "0x4e91",
             "to": "0xad3ecf23c0c8983b07163708be6d763b5f056193",
-            "input": "0x",
+            "input": "G",
             "value": "0x4563918244f400000",
             "type": "CALL"
           },
@@ -782,7 +782,7 @@
                     "gas": "0x301e6f",
                     "gasUsed": "0x10068",
                     "to": "0x6e715ab4f598eacf0016b9b35ef33e4141844ccc",
-                    "input": "0x",
+                    "input": "G",
                     "output": "0x0000000000000000000000000000000000000000000000000000000000000001",
                     "calls": [
                       {
@@ -836,7 +836,7 @@
                                 "gas": "0x2eb7fd",
                                 "gasUsed": "0x6918",
                                 "to": "0x6e715ab4f598eacf0016b9b35ef33e4141844ccc",
-                                "input": "0x",
+                                "input": "G",
                                 "output": "0x0000000000000000000000000000000000000000000000000000000000000001",
                                 "calls": [
                                   {
@@ -1273,7 +1273,7 @@
             "gas": "0x3",
             "gasUsed": "0x3",
             "to": "0x0000000000000000000000000000000000000004",
-            "input": "0x",
+            "input": "G",
             "error": "out of gas",
             "value": "0x0",
             "type": "CALL"
@@ -1283,7 +1283,7 @@
             "gas": "0x3",
             "gasUsed": "0x3",
             "to": "0x0000000000000000000000000000000000000004",
-            "input": "0x",
+            "input": "G",
             "error": "out of gas",
             "value": "0x0",
             "type": "CALL"
@@ -1301,7 +1301,7 @@
                 "gas": "0x3",
                 "gasUsed": "0x3",
                 "to": "0x0000000000000000000000000000000000000004",
-                "input": "0x",
+                "input": "G",
                 "error": "out of gas",
                 "value": "0x0",
                 "type": "CALL"
@@ -1311,7 +1311,7 @@
                 "gas": "0x3",
                 "gasUsed": "0x3",
                 "to": "0x0000000000000000000000000000000000000004",
-                "input": "0x",
+                "input": "G",
                 "error": "out of gas",
                 "value": "0x0",
                 "type": "CALL"
@@ -1366,7 +1366,7 @@
             "gas": "0x3",
             "gasUsed": "0x3",
             "to": "0x0000000000000000000000000000000000000004",
-            "input": "0x",
+            "input": "G",
             "error": "out of gas",
             "value": "0x0",
             "type": "CALL"
@@ -1376,7 +1376,7 @@
             "gas": "0x3",
             "gasUsed": "0x3",
             "to": "0x0000000000000000000000000000000000000004",
-            "input": "0x",
+            "input": "G",
             "error": "out of gas",
             "value": "0x0",
             "type": "CALL"
@@ -1394,7 +1394,7 @@
                 "gas": "0x3",
                 "gasUsed": "0x3",
                 "to": "0x0000000000000000000000000000000000000004",
-                "input": "0x",
+                "input": "G",
                 "error": "out of gas",
                 "value": "0x0",
                 "type": "CALL"
@@ -1404,7 +1404,7 @@
                 "gas": "0x3",
                 "gasUsed": "0x3",
                 "to": "0x0000000000000000000000000000000000000004",
-                "input": "0x",
+                "input": "G",
                 "error": "out of gas",
                 "value": "0x0",
                 "type": "CALL"
@@ -1459,7 +1459,7 @@
             "gas": "0x3",
             "gasUsed": "0x3",
             "to": "0x0000000000000000000000000000000000000004",
-            "input": "0x",
+            "input": "G",
             "error": "out of gas",
             "value": "0x0",
             "type": "CALL"
@@ -1469,7 +1469,7 @@
             "gas": "0x3",
             "gasUsed": "0x3",
             "to": "0x0000000000000000000000000000000000000004",
-            "input": "0x",
+            "input": "G",
             "error": "out of gas",
             "value": "0x0",
             "type": "CALL"
@@ -1487,7 +1487,7 @@
                 "gas": "0x3",
                 "gasUsed": "0x3",
                 "to": "0x0000000000000000000000000000000000000004",
-                "input": "0x",
+                "input": "G",
                 "error": "out of gas",
                 "value": "0x0",
                 "type": "CALL"
@@ -1497,7 +1497,7 @@
                 "gas": "0x3",
                 "gasUsed": "0x3",
                 "to": "0x0000000000000000000000000000000000000004",
-                "input": "0x",
+                "input": "G",
                 "error": "out of gas",
                 "value": "0x0",
                 "type": "CALL"
@@ -1552,7 +1552,7 @@
             "gas": "0x3",
             "gasUsed": "0x3",
             "to": "0x0000000000000000000000000000000000000004",
-            "input": "0x",
+            "input": "G",
             "error": "out of gas",
             "value": "0x0",
             "type": "CALL"
@@ -1562,7 +1562,7 @@
             "gas": "0x3",
             "gasUsed": "0x3",
             "to": "0x0000000000000000000000000000000000000004",
-            "input": "0x",
+            "input": "G",
             "error": "out of gas",
             "value": "0x0",
             "type": "CALL"
@@ -1580,7 +1580,7 @@
                 "gas": "0x3",
                 "gasUsed": "0x3",
                 "to": "0x0000000000000000000000000000000000000004",
-                "input": "0x",
+                "input": "G",
                 "error": "out of gas",
                 "value": "0x0",
                 "type": "CALL"
@@ -1590,7 +1590,7 @@
                 "gas": "0x3",
                 "gasUsed": "0x3",
                 "to": "0x0000000000000000000000000000000000000004",
-                "input": "0x",
+                "input": "G",
                 "error": "out of gas",
                 "value": "0x0",
                 "type": "CALL"
@@ -1645,7 +1645,7 @@
             "gas": "0x3",
             "gasUsed": "0x3",
             "to": "0x0000000000000000000000000000000000000004",
-            "input": "0x",
+            "input": "G",
             "error": "out of gas",
             "value": "0x0",
             "type": "CALL"
@@ -1655,7 +1655,7 @@
             "gas": "0x3",
             "gasUsed": "0x3",
             "to": "0x0000000000000000000000000000000000000004",
-            "input": "0x",
+            "input": "G",
             "error": "out of gas",
             "value": "0x0",
             "type": "CALL"
@@ -1673,7 +1673,7 @@
                 "gas": "0x3",
                 "gasUsed": "0x3",
                 "to": "0x0000000000000000000000000000000000000004",
-                "input": "0x",
+                "input": "G",
                 "error": "out of gas",
                 "value": "0x0",
                 "type": "CALL"
@@ -1683,7 +1683,7 @@
                 "gas": "0x3",
                 "gasUsed": "0x3",
                 "to": "0x0000000000000000000000000000000000000004",
-                "input": "0x",
+                "input": "G",
                 "error": "out of gas",
                 "value": "0x0",
                 "type": "CALL"
@@ -1738,7 +1738,7 @@
             "gas": "0x3",
             "gasUsed": "0x3",
             "to": "0x0000000000000000000000000000000000000004",
-            "input": "0x",
+            "input": "G",
             "error": "out of gas",
             "value": "0x0",
             "type": "CALL"
@@ -1748,7 +1748,7 @@
             "gas": "0x3",
             "gasUsed": "0x3",
             "to": "0x0000000000000000000000000000000000000004",
-            "input": "0x",
+            "input": "G",
             "error": "out of gas",
             "value": "0x0",
             "type": "CALL"
@@ -1766,7 +1766,7 @@
                 "gas": "0x3",
                 "gasUsed": "0x3",
                 "to": "0x0000000000000000000000000000000000000004",
-                "input": "0x",
+                "input": "G",
                 "error": "out of gas",
                 "value": "0x0",
                 "type": "CALL"
@@ -1776,7 +1776,7 @@
                 "gas": "0x3",
                 "gasUsed": "0x3",
                 "to": "0x0000000000000000000000000000000000000004",
-                "input": "0x",
+                "input": "G",
                 "error": "out of gas",
                 "value": "0x0",
                 "type": "CALL"
@@ -1831,7 +1831,7 @@
             "gas": "0x3",
             "gasUsed": "0x3",
             "to": "0x0000000000000000000000000000000000000004",
-            "input": "0x",
+            "input": "G",
             "error": "out of gas",
             "value": "0x0",
             "type": "CALL"
@@ -1841,7 +1841,7 @@
             "gas": "0x3",
             "gasUsed": "0x3",
             "to": "0x0000000000000000000000000000000000000004",
-            "input": "0x",
+            "input": "G",
             "error": "out of gas",
             "value": "0x0",
             "type": "CALL"
@@ -1859,7 +1859,7 @@
                 "gas": "0x3",
                 "gasUsed": "0x3",
                 "to": "0x0000000000000000000000000000000000000004",
-                "input": "0x",
+                "input": "G",
                 "error": "out of gas",
                 "value": "0x0",
                 "type": "CALL"
@@ -1869,7 +1869,7 @@
                 "gas": "0x3",
                 "gasUsed": "0x3",
                 "to": "0x0000000000000000000000000000000000000004",
-                "input": "0x",
+                "input": "G",
                 "error": "out of gas",
                 "value": "0x0",
                 "type": "CALL"
@@ -1924,7 +1924,7 @@
             "gas": "0x3",
             "gasUsed": "0x3",
             "to": "0x0000000000000000000000000000000000000004",
-            "input": "0x",
+            "input": "G",
             "error": "out of gas",
             "value": "0x0",
             "type": "CALL"
@@ -1934,7 +1934,7 @@
             "gas": "0x3",
             "gasUsed": "0x3",
             "to": "0x0000000000000000000000000000000000000004",
-            "input": "0x",
+            "input": "G",
             "error": "out of gas",
             "value": "0x0",
             "type": "CALL"
@@ -1952,7 +1952,7 @@
                 "gas": "0x3",
                 "gasUsed": "0x3",
                 "to": "0x0000000000000000000000000000000000000004",
-                "input": "0x",
+                "input": "G",
                 "error": "out of gas",
                 "value": "0x0",
                 "type": "CALL"
@@ -1962,7 +1962,7 @@
                 "gas": "0x3",
                 "gasUsed": "0x3",
                 "to": "0x0000000000000000000000000000000000000004",
-                "input": "0x",
+                "input": "G",
                 "error": "out of gas",
                 "value": "0x0",
                 "type": "CALL"
@@ -2017,7 +2017,7 @@
             "gas": "0x3",
             "gasUsed": "0x3",
             "to": "0x0000000000000000000000000000000000000004",
-            "input": "0x",
+            "input": "G",
             "error": "out of gas",
             "value": "0x0",
             "type": "CALL"
@@ -2027,7 +2027,7 @@
             "gas": "0x3",
             "gasUsed": "0x3",
             "to": "0x0000000000000000000000000000000000000004",
-            "input": "0x",
+            "input": "G",
             "error": "out of gas",
             "value": "0x0",
             "type": "CALL"
@@ -2045,7 +2045,7 @@
                 "gas": "0x3",
                 "gasUsed": "0x3",
                 "to": "0x0000000000000000000000000000000000000004",
-                "input": "0x",
+                "input": "G",
                 "error": "out of gas",
                 "value": "0x0",
                 "type": "CALL"
@@ -2055,7 +2055,7 @@
                 "gas": "0x3",
                 "gasUsed": "0x3",
                 "to": "0x0000000000000000000000000000000000000004",
-                "input": "0x",
+                "input": "G",
                 "error": "out of gas",
                 "value": "0x0",
                 "type": "CALL"
@@ -2110,7 +2110,7 @@
             "gas": "0x3",
             "gasUsed": "0x3",
             "to": "0x0000000000000000000000000000000000000004",
-            "input": "0x",
+            "input": "G",
             "error": "out of gas",
             "value": "0x0",
             "type": "CALL"
@@ -2120,7 +2120,7 @@
             "gas": "0x3",
             "gasUsed": "0x3",
             "to": "0x0000000000000000000000000000000000000004",
-            "input": "0x",
+            "input": "G",
             "error": "out of gas",
             "value": "0x0",
             "type": "CALL"
@@ -2138,7 +2138,7 @@
                 "gas": "0x3",
                 "gasUsed": "0x3",
                 "to": "0x0000000000000000000000000000000000000004",
-                "input": "0x",
+                "input": "G",
                 "error": "out of gas",
                 "value": "0x0",
                 "type": "CALL"
@@ -2148,7 +2148,7 @@
                 "gas": "0x3",
                 "gasUsed": "0x3",
                 "to": "0x0000000000000000000000000000000000000004",
-                "input": "0x",
+                "input": "G",
                 "error": "out of gas",
                 "value": "0x0",
                 "type": "CALL"

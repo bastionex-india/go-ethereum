@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
 
-package eth
+package G
 
 import (
 	"compress/gzip"
@@ -137,12 +137,12 @@ func (api *MinerAPI) SetRecommitInterval(interval int) {
 // AdminAPI is the collection of Ethereum full node related APIs for node
 // administration.
 type AdminAPI struct {
-	eth *Ethereum
+	G *Ethereum
 }
 
 // NewAdminAPI creates a new instance of AdminAPI.
-func NewAdminAPI(eth *Ethereum) *AdminAPI {
-	return &AdminAPI{eth: eth}
+func NewAdminAPI(G *Ethereum) *AdminAPI {
+	return &AdminAPI{G: G}
 }
 
 // ExportChain exports the current blockchain into a local file,
@@ -152,7 +152,7 @@ func (api *AdminAPI) ExportChain(file string, first *uint64, last *uint64) (bool
 		return false, errors.New("last cannot be specified without first")
 	}
 	if first != nil && last == nil {
-		head := api.eth.BlockChain().CurrentHeader().Number.Uint64()
+		head := api.G.BlockChain().CurrentHeader().Number.Uint64()
 		last = &head
 	}
 	if _, err := os.Stat(file); err == nil {
@@ -175,10 +175,10 @@ func (api *AdminAPI) ExportChain(file string, first *uint64, last *uint64) (bool
 
 	// Export the blockchain
 	if first != nil {
-		if err := api.eth.BlockChain().ExportN(writer, *first, *last); err != nil {
+		if err := api.G.BlockChain().ExportN(writer, *first, *last); err != nil {
 			return false, err
 		}
-	} else if err := api.eth.BlockChain().Export(writer); err != nil {
+	} else if err := api.G.BlockChain().Export(writer); err != nil {
 		return false, err
 	}
 	return true, nil
@@ -230,12 +230,12 @@ func (api *AdminAPI) ImportChain(file string) (bool, error) {
 			break
 		}
 
-		if hasAllBlocks(api.eth.BlockChain(), blocks) {
+		if hasAllBlocks(api.G.BlockChain(), blocks) {
 			blocks = blocks[:0]
 			continue
 		}
 		// Import the batch and reset the buffer
-		if _, err := api.eth.BlockChain().InsertChain(blocks); err != nil {
+		if _, err := api.G.BlockChain().InsertChain(blocks); err != nil {
 			return false, fmt.Errorf("batch %d: failed to insert: %v", batch, err)
 		}
 		blocks = blocks[:0]
@@ -246,12 +246,12 @@ func (api *AdminAPI) ImportChain(file string) (bool, error) {
 // DebugAPI is the collection of Ethereum full node APIs for debugging the
 // protocol.
 type DebugAPI struct {
-	eth *Ethereum
+	G *Ethereum
 }
 
 // NewDebugAPI creates a new DebugAPI instance.
-func NewDebugAPI(eth *Ethereum) *DebugAPI {
-	return &DebugAPI{eth: eth}
+func NewDebugAPI(G *Ethereum) *DebugAPI {
+	return &DebugAPI{G: G}
 }
 
 // DumpBlock retrieves the entire state of the database at a given block.
@@ -264,18 +264,18 @@ func (api *DebugAPI) DumpBlock(blockNr rpc.BlockNumber) (state.Dump, error) {
 		// If we're dumping the pending state, we need to request
 		// both the pending block as well as the pending state from
 		// the miner and operate on those
-		_, stateDb := api.eth.miner.Pending()
+		_, stateDb := api.G.miner.Pending()
 		return stateDb.RawDump(opts), nil
 	}
 	var header *types.Header
 	if blockNr == rpc.LatestBlockNumber {
-		header = api.eth.blockchain.CurrentBlock()
+		header = api.G.blockchain.CurrentBlock()
 	} else if blockNr == rpc.FinalizedBlockNumber {
-		header = api.eth.blockchain.CurrentFinalBlock()
+		header = api.G.blockchain.CurrentFinalBlock()
 	} else if blockNr == rpc.SafeBlockNumber {
-		header = api.eth.blockchain.CurrentSafeBlock()
+		header = api.G.blockchain.CurrentSafeBlock()
 	} else {
-		block := api.eth.blockchain.GetBlockByNumber(uint64(blockNr))
+		block := api.G.blockchain.GetBlockByNumber(uint64(blockNr))
 		if block == nil {
 			return state.Dump{}, fmt.Errorf("block #%d not found", blockNr)
 		}
@@ -284,7 +284,7 @@ func (api *DebugAPI) DumpBlock(blockNr rpc.BlockNumber) (state.Dump, error) {
 	if header == nil {
 		return state.Dump{}, fmt.Errorf("block #%d not found", blockNr)
 	}
-	stateDb, err := api.eth.BlockChain().StateAt(header.Root)
+	stateDb, err := api.G.BlockChain().StateAt(header.Root)
 	if err != nil {
 		return state.Dump{}, err
 	}
@@ -293,7 +293,7 @@ func (api *DebugAPI) DumpBlock(blockNr rpc.BlockNumber) (state.Dump, error) {
 
 // Preimage is a debug API function that returns the preimage for a sha3 hash, if known.
 func (api *DebugAPI) Preimage(ctx context.Context, hash common.Hash) (hexutil.Bytes, error) {
-	if preimage := rawdb.ReadPreimage(api.eth.ChainDb(), hash); preimage != nil {
+	if preimage := rawdb.ReadPreimage(api.G.ChainDb(), hash); preimage != nil {
 		return preimage, nil
 	}
 	return nil, errors.New("unknown preimage")
@@ -311,7 +311,7 @@ type BadBlockArgs struct {
 func (api *DebugAPI) GetBadBlocks(ctx context.Context) ([]*BadBlockArgs, error) {
 	var (
 		err     error
-		blocks  = rawdb.ReadAllBadBlocks(api.eth.chainDb)
+		blocks  = rawdb.ReadAllBadBlocks(api.G.chainDb)
 		results = make([]*BadBlockArgs, 0, len(blocks))
 	)
 	for _, block := range blocks {
@@ -324,7 +324,7 @@ func (api *DebugAPI) GetBadBlocks(ctx context.Context) ([]*BadBlockArgs, error) 
 		} else {
 			blockRlp = fmt.Sprintf("%#x", rlpBytes)
 		}
-		if blockJSON, err = ethapi.RPCMarshalBlock(block, true, true, api.eth.APIBackend.ChainConfig()); err != nil {
+		if blockJSON, err = ethapi.RPCMarshalBlock(block, true, true, api.G.APIBackend.ChainConfig()); err != nil {
 			blockJSON = map[string]interface{}{"error": err.Error()}
 		}
 		results = append(results, &BadBlockArgs{
@@ -349,17 +349,17 @@ func (api *DebugAPI) AccountRange(blockNrOrHash rpc.BlockNumberOrHash, start hex
 			// If we're dumping the pending state, we need to request
 			// both the pending block as well as the pending state from
 			// the miner and operate on those
-			_, stateDb = api.eth.miner.Pending()
+			_, stateDb = api.G.miner.Pending()
 		} else {
 			var header *types.Header
 			if number == rpc.LatestBlockNumber {
-				header = api.eth.blockchain.CurrentBlock()
+				header = api.G.blockchain.CurrentBlock()
 			} else if number == rpc.FinalizedBlockNumber {
-				header = api.eth.blockchain.CurrentFinalBlock()
+				header = api.G.blockchain.CurrentFinalBlock()
 			} else if number == rpc.SafeBlockNumber {
-				header = api.eth.blockchain.CurrentSafeBlock()
+				header = api.G.blockchain.CurrentSafeBlock()
 			} else {
-				block := api.eth.blockchain.GetBlockByNumber(uint64(number))
+				block := api.G.blockchain.GetBlockByNumber(uint64(number))
 				if block == nil {
 					return state.IteratorDump{}, fmt.Errorf("block #%d not found", number)
 				}
@@ -368,17 +368,17 @@ func (api *DebugAPI) AccountRange(blockNrOrHash rpc.BlockNumberOrHash, start hex
 			if header == nil {
 				return state.IteratorDump{}, fmt.Errorf("block #%d not found", number)
 			}
-			stateDb, err = api.eth.BlockChain().StateAt(header.Root)
+			stateDb, err = api.G.BlockChain().StateAt(header.Root)
 			if err != nil {
 				return state.IteratorDump{}, err
 			}
 		}
 	} else if hash, ok := blockNrOrHash.Hash(); ok {
-		block := api.eth.blockchain.GetBlockByHash(hash)
+		block := api.G.blockchain.GetBlockByHash(hash)
 		if block == nil {
 			return state.IteratorDump{}, fmt.Errorf("block %s not found", hash.Hex())
 		}
-		stateDb, err = api.eth.BlockChain().StateAt(block.Root())
+		stateDb, err = api.G.BlockChain().StateAt(block.Root())
 		if err != nil {
 			return state.IteratorDump{}, err
 		}
@@ -415,11 +415,11 @@ type storageEntry struct {
 // StorageRangeAt returns the storage at the given block height and transaction index.
 func (api *DebugAPI) StorageRangeAt(ctx context.Context, blockHash common.Hash, txIndex int, contractAddress common.Address, keyStart hexutil.Bytes, maxResult int) (StorageRangeResult, error) {
 	// Retrieve the block
-	block := api.eth.blockchain.GetBlockByHash(blockHash)
+	block := api.G.blockchain.GetBlockByHash(blockHash)
 	if block == nil {
 		return StorageRangeResult{}, fmt.Errorf("block %#x not found", blockHash)
 	}
-	_, _, statedb, release, err := api.eth.stateAtTransaction(ctx, block, txIndex, 0)
+	_, _, statedb, release, err := api.G.stateAtTransaction(ctx, block, txIndex, 0)
 	if err != nil {
 		return StorageRangeResult{}, err
 	}
@@ -466,19 +466,19 @@ func storageRangeAt(st state.Trie, start []byte, maxResult int) (StorageRangeRes
 func (api *DebugAPI) GetModifiedAccountsByNumber(startNum uint64, endNum *uint64) ([]common.Address, error) {
 	var startBlock, endBlock *types.Block
 
-	startBlock = api.eth.blockchain.GetBlockByNumber(startNum)
+	startBlock = api.G.blockchain.GetBlockByNumber(startNum)
 	if startBlock == nil {
 		return nil, fmt.Errorf("start block %x not found", startNum)
 	}
 
 	if endNum == nil {
 		endBlock = startBlock
-		startBlock = api.eth.blockchain.GetBlockByHash(startBlock.ParentHash())
+		startBlock = api.G.blockchain.GetBlockByHash(startBlock.ParentHash())
 		if startBlock == nil {
 			return nil, fmt.Errorf("block %x has no parent", endBlock.Number())
 		}
 	} else {
-		endBlock = api.eth.blockchain.GetBlockByNumber(*endNum)
+		endBlock = api.G.blockchain.GetBlockByNumber(*endNum)
 		if endBlock == nil {
 			return nil, fmt.Errorf("end block %d not found", *endNum)
 		}
@@ -493,19 +493,19 @@ func (api *DebugAPI) GetModifiedAccountsByNumber(startNum uint64, endNum *uint64
 // With one parameter, returns the list of accounts modified in the specified block.
 func (api *DebugAPI) GetModifiedAccountsByHash(startHash common.Hash, endHash *common.Hash) ([]common.Address, error) {
 	var startBlock, endBlock *types.Block
-	startBlock = api.eth.blockchain.GetBlockByHash(startHash)
+	startBlock = api.G.blockchain.GetBlockByHash(startHash)
 	if startBlock == nil {
 		return nil, fmt.Errorf("start block %x not found", startHash)
 	}
 
 	if endHash == nil {
 		endBlock = startBlock
-		startBlock = api.eth.blockchain.GetBlockByHash(startBlock.ParentHash())
+		startBlock = api.G.blockchain.GetBlockByHash(startBlock.ParentHash())
 		if startBlock == nil {
 			return nil, fmt.Errorf("block %x has no parent", endBlock.Number())
 		}
 	} else {
-		endBlock = api.eth.blockchain.GetBlockByHash(*endHash)
+		endBlock = api.G.blockchain.GetBlockByHash(*endHash)
 		if endBlock == nil {
 			return nil, fmt.Errorf("end block %x not found", *endHash)
 		}
@@ -517,7 +517,7 @@ func (api *DebugAPI) getModifiedAccounts(startBlock, endBlock *types.Block) ([]c
 	if startBlock.Number().Uint64() >= endBlock.Number().Uint64() {
 		return nil, fmt.Errorf("start block height (%d) must be less than end block height (%d)", startBlock.Number().Uint64(), endBlock.Number().Uint64())
 	}
-	triedb := api.eth.BlockChain().StateCache().TrieDB()
+	triedb := api.G.BlockChain().StateCache().TrieDB()
 
 	oldTrie, err := trie.NewStateTrie(trie.StateTrieID(startBlock.Root()), triedb)
 	if err != nil {
@@ -547,7 +547,7 @@ func (api *DebugAPI) getModifiedAccounts(startBlock, endBlock *types.Block) ([]c
 // The (from, to) parameters are the sequence of blocks to search, which can go
 // either forwards or backwards
 func (api *DebugAPI) GetAccessibleState(from, to rpc.BlockNumber) (uint64, error) {
-	db := api.eth.ChainDb()
+	db := api.G.ChainDb()
 	var pivot uint64
 	if p := rawdb.ReadLastPivotNumber(db); p != nil {
 		pivot = *p
@@ -556,7 +556,7 @@ func (api *DebugAPI) GetAccessibleState(from, to rpc.BlockNumber) (uint64, error
 	var resolveNum = func(num rpc.BlockNumber) (uint64, error) {
 		// We don't have state for pending (-2), so treat it as latest
 		if num.Int64() < 0 {
-			block := api.eth.blockchain.CurrentBlock()
+			block := api.G.blockchain.CurrentBlock()
 			if block == nil {
 				return 0, fmt.Errorf("current block missing")
 			}
@@ -591,11 +591,11 @@ func (api *DebugAPI) GetAccessibleState(from, to rpc.BlockNumber) (uint64, error
 		if i < int64(pivot) {
 			continue
 		}
-		h := api.eth.BlockChain().GetHeaderByNumber(uint64(i))
+		h := api.G.BlockChain().GetHeaderByNumber(uint64(i))
 		if h == nil {
 			return 0, fmt.Errorf("missing header %d", i)
 		}
-		if ok, _ := api.eth.ChainDb().Has(h.Root[:]); ok {
+		if ok, _ := api.G.ChainDb().Has(h.Root[:]); ok {
 			return uint64(i), nil
 		}
 	}
@@ -609,6 +609,6 @@ func (api *DebugAPI) SetTrieFlushInterval(interval string) error {
 	if err != nil {
 		return err
 	}
-	api.eth.blockchain.SetTrieFlushInterval(t)
+	api.G.blockchain.SetTrieFlushInterval(t)
 	return nil
 }

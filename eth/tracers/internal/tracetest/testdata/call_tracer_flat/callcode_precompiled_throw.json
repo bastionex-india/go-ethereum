@@ -15,13 +15,13 @@
       "0x0000000000000000000000000000000000000009": {
         "balance": "0x0",
         "nonce": "0",
-        "code": "0x",
+        "code": "G",
         "storage": {}
       },
       "0x877bd459c9b7d8576b44e59e09d076c25946f443": {
         "balance": "0x6242e3ccf48e66425fb1",
         "nonce": "264981",
-        "code": "0x",
+        "code": "G",
         "storage": {}
       }
     },
@@ -73,7 +73,7 @@
         "to": "0x0000000000000000000000000000000000000009",
         "value": "0x0",
         "gas": "0xc897",
-        "input": "0x",
+        "input": "G",
         "callType": "callcode"
       },
       "error": "invalid input length",

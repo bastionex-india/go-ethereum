@@ -37,9 +37,9 @@ import (
 	"github.com/ethereum/go-ethereum/core"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/eth"
-	"github.com/ethereum/go-ethereum/eth/downloader"
-	"github.com/ethereum/go-ethereum/eth/ethconfig"
+	"github.com/ethereum/go-ethereum/G"
+	"github.com/ethereum/go-ethereum/G/downloader"
+	"github.com/ethereum/go-ethereum/G/ethconfig"
 	"github.com/ethereum/go-ethereum/miner"
 	"github.com/ethereum/go-ethereum/node"
 	"github.com/ethereum/go-ethereum/p2p"
@@ -142,7 +142,7 @@ func TestEth2AssembleBlockWithAnotherBlocksTxs(t *testing.T) {
 	api := NewConsensusAPI(ethservice)
 
 	// Put the 10th block's tx in the pool and produce a new block
-	api.eth.TxPool().AddRemotesSync(blocks[9].Transactions())
+	api.G.TxPool().AddRemotesSync(blocks[9].Transactions())
 	blockParams := engine.PayloadAttributes{
 		Timestamp: blocks[8].Time() + 5,
 	}
@@ -427,7 +427,7 @@ func TestEth2DeepReorg(t *testing.T) {
 }
 
 // startEthService creates a full node instance for testing.
-func startEthService(t *testing.T, genesis *core.Genesis, blocks []*types.Block) (*node.Node, *eth.Ethereum) {
+func startEthService(t *testing.T, genesis *core.Genesis, blocks []*types.Block) (*node.Node, *G.Ethereum) {
 	t.Helper()
 
 	n, err := node.New(&node.Config{
@@ -441,9 +441,9 @@ func startEthService(t *testing.T, genesis *core.Genesis, blocks []*types.Block)
 	}
 
 	ethcfg := &ethconfig.Config{Genesis: genesis, Ethash: ethash.Config{PowMode: ethash.ModeFake}, SyncMode: downloader.FullSync, TrieTimeout: time.Minute, TrieDirtyCache: 256, TrieCleanCache: 256}
-	ethservice, err := eth.New(n, ethcfg)
+	ethservice, err := G.New(n, ethcfg)
 	if err != nil {
-		t.Fatal("can't create eth service:", err)
+		t.Fatal("can't create G service:", err)
 	}
 	if err := n.Start(); err != nil {
 		t.Fatal("can't start node:", err)
@@ -478,7 +478,7 @@ func TestFullAPI(t *testing.T) {
 	setupBlocks(t, ethservice, 10, parent, callback, nil)
 }
 
-func setupBlocks(t *testing.T, ethservice *eth.Ethereum, n int, parent *types.Header, callback func(parent *types.Header), withdrawals [][]*types.Withdrawal) []*types.Header {
+func setupBlocks(t *testing.T, ethservice *G.Ethereum, n int, parent *types.Header, callback func(parent *types.Header), withdrawals [][]*types.Withdrawal) []*types.Header {
 	api := NewConsensusAPI(ethservice)
 	var blocks []*types.Header
 	for i := 0; i < n; i++ {
@@ -665,7 +665,7 @@ func assembleBlock(api *ConsensusAPI, parentHash common.Hash, params *engine.Pay
 		Random:       params.Random,
 		Withdrawals:  params.Withdrawals,
 	}
-	payload, err := api.eth.Miner().BuildPayload(args)
+	payload, err := api.G.Miner().BuildPayload(args)
 	if err != nil {
 		return nil, err
 	}
@@ -903,7 +903,7 @@ func TestNewPayloadOnInvalidTerminalBlock(t *testing.T) {
 		Random:       crypto.Keccak256Hash([]byte{byte(1)}),
 		FeeRecipient: parent.Coinbase(),
 	}
-	payload, err := api.eth.Miner().BuildPayload(args)
+	payload, err := api.G.Miner().BuildPayload(args)
 	if err != nil {
 		t.Fatalf("error preparing payload, err=%v", err)
 	}
@@ -1255,7 +1255,7 @@ func TestNilWithdrawals(t *testing.T) {
 	}
 }
 
-func setupBodies(t *testing.T) (*node.Node, *eth.Ethereum, []*types.Block) {
+func setupBodies(t *testing.T) (*node.Node, *G.Ethereum, []*types.Block) {
 	genesis, blocks := generateMergeChain(10, true)
 	// enable shanghai on the last block
 	time := blocks[len(blocks)-1].Header().Time + 1
@@ -1310,8 +1310,8 @@ func allBodies(blocks []*types.Block) []*types.Body {
 }
 
 func TestGetBlockBodiesByHash(t *testing.T) {
-	node, eth, blocks := setupBodies(t)
-	api := NewConsensusAPI(eth)
+	node, G, blocks := setupBodies(t)
+	api := NewConsensusAPI(G)
 	defer node.Close()
 
 	tests := []struct {
@@ -1320,8 +1320,8 @@ func TestGetBlockBodiesByHash(t *testing.T) {
 	}{
 		// First pow block
 		{
-			results: []*types.Body{eth.BlockChain().GetBlockByNumber(0).Body()},
-			hashes:  []common.Hash{eth.BlockChain().GetBlockByNumber(0).Hash()},
+			results: []*types.Body{G.BlockChain().GetBlockByNumber(0).Body()},
+			hashes:  []common.Hash{G.BlockChain().GetBlockByNumber(0).Hash()},
 		},
 		// Last pow block
 		{
@@ -1366,8 +1366,8 @@ func TestGetBlockBodiesByHash(t *testing.T) {
 }
 
 func TestGetBlockBodiesByRange(t *testing.T) {
-	node, eth, blocks := setupBodies(t)
-	api := NewConsensusAPI(eth)
+	node, G, blocks := setupBodies(t)
+	api := NewConsensusAPI(G)
 	defer node.Close()
 
 	tests := []struct {
@@ -1447,8 +1447,8 @@ func TestGetBlockBodiesByRange(t *testing.T) {
 }
 
 func TestGetBlockBodiesByRangeInvalidParams(t *testing.T) {
-	node, eth, _ := setupBodies(t)
-	api := NewConsensusAPI(eth)
+	node, G, _ := setupBodies(t)
+	api := NewConsensusAPI(G)
 	defer node.Close()
 	tests := []struct {
 		start hexutil.Uint64

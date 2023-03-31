@@ -10,7 +10,7 @@
     "alloc": {
       "0x70c9217d814985faef62b124420f8dfbddd96433": {
         "balance": "0x4ecd70668f5d854a",
-        "code": "0x",
+        "code": "G",
         "nonce": "1638",
         "storage": {}
       },

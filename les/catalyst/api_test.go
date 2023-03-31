@@ -26,8 +26,8 @@ import (
 	"github.com/ethereum/go-ethereum/core"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/eth/downloader"
-	"github.com/ethereum/go-ethereum/eth/ethconfig"
+	"github.com/ethereum/go-ethereum/G/downloader"
+	"github.com/ethereum/go-ethereum/G/ethconfig"
 	"github.com/ethereum/go-ethereum/les"
 	"github.com/ethereum/go-ethereum/node"
 	"github.com/ethereum/go-ethereum/params"
@@ -231,7 +231,7 @@ func startLesService(t *testing.T, genesis *core.Genesis, headers []*types.Heade
 	}
 	lesService, err := les.New(n, ethcfg)
 	if err != nil {
-		t.Fatal("can't create eth service:", err)
+		t.Fatal("can't create G service:", err)
 	}
 	if err := n.Start(); err != nil {
 		t.Fatal("can't start node:", err)

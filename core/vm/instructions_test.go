@@ -688,7 +688,7 @@ func TestCreate2Addreses(t *testing.T) {
 		{
 			origin:   "0x0000000000000000000000000000000000000000",
 			salt:     "0x0000000000000000000000000000000000000000",
-			code:     "0x",
+			code:     "G",
 			expected: "0xE33C0C7F7df4809055C3ebA6c09CFe4BaF1BD9e0",
 		},
 	} {
@@ -704,7 +704,7 @@ func TestCreate2Addreses(t *testing.T) {
 			stack.push(big.NewInt(0)) // memstart
 			stack.push(big.NewInt(0)) // value
 			gas, _ := gasCreate2(params.GasTable{}, nil, nil, stack, nil, 0)
-			fmt.Printf("Example %d\n* address `0x%x`\n* salt `0x%x`\n* init_code `0x%x`\n* gas (assuming no mem expansion): `%v`\n* result: `%s`\n\n", i,origin, salt, code, gas, address.String())
+			fmt.Printf("Example %d\n* address `G%x`\n* salt `G%x`\n* init_code `G%x`\n* gas (assuming no mem expansion): `%v`\n* result: `%s`\n\n", i,origin, salt, code, gas, address.String())
 		*/
 		expected := common.BytesToAddress(common.FromHex(tt.expected))
 		if !bytes.Equal(expected.Bytes(), address.Bytes()) {

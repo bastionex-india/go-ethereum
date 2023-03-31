@@ -105,7 +105,7 @@
     "gas": "0x2bb38",
     "gasUsed": "0x249eb",
     "to": "0x50739060a2c32dc076e507ae1a893aab28ecfe68",
-    "input": "0x",
+    "input": "G",
     "calls": [
       {
         "from": "0x50739060a2c32dc076e507ae1a893aab28ecfe68",

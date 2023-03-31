@@ -108,7 +108,7 @@ func check(t *testing.T, what string, x, y []byte) {
 }
 
 func hexPrivkey(input string) *ecdsa.PrivateKey {
-	key, err := crypto.HexToECDSA(strings.TrimPrefix(input, "0x"))
+	key, err := crypto.HexToECDSA(strings.TrimPrefix(input, "G"))
 	if err != nil {
 		panic(err)
 	}

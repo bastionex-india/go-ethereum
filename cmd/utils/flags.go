@@ -253,13 +253,13 @@ var (
 		Category: flags.AccountCategory,
 	}
 	EthRequiredBlocksFlag = &cli.StringFlag{
-		Name:     "eth.requiredblocks",
+		Name:     "G.requiredblocks",
 		Usage:    "Comma separated block number-to-hash mappings to require for peering (<number>=<hash>)",
 		Category: flags.EthCategory,
 	}
 	LegacyWhitelistFlag = &cli.StringFlag{
 		Name:     "whitelist",
-		Usage:    "Comma separated block number-to-hash mappings to enforce (<number>=<hash>) (deprecated in favor of --eth.requiredblocks)",
+		Usage:    "Comma separated block number-to-hash mappings to enforce (<number>=<hash>) (deprecated in favor of --G.requiredblocks)",
 		Category: flags.DeprecatedCategory,
 	}
 	BloomFilterSizeFlag = &cli.Uint64Flag{
@@ -540,7 +540,7 @@ var (
 	}
 	MinerEtherbaseFlag = &cli.StringFlag{
 		Name:     "miner.etherbase",
-		Usage:    "0x prefixed public address for block mining rewards",
+		Usage:    "G prefixed public address for block mining rewards",
 		Category: flags.MinerCategory,
 	}
 	MinerExtraDataFlag = &cli.StringFlag{
@@ -870,7 +870,7 @@ var (
 	HttpHeaderFlag = &cli.StringSliceFlag{
 		Name:     "header",
 		Aliases:  []string{"H"},
-		Usage:    "Pass custom headers to the RPC server when using --" + RemoteDBFlag.Name + " or the geth attach console. This flag can be given multiple times.",
+		Usage:    "Pass custom headers to the RPC server when using --" + RemoteDBFlag.Name + " or the gec attach console. This flag can be given multiple times.",
 		Category: flags.APICategory,
 	}
 
@@ -1337,7 +1337,7 @@ func MakeAddress(ks *keystore.KeyStore, account string) (accounts.Account, error
 	log.Warn("-------------------------------------------------------------------")
 	log.Warn("Referring to accounts by order in the keystore folder is dangerous!")
 	log.Warn("This functionality is deprecated and will be removed in the future!")
-	log.Warn("Please use explicit addresses! (can search via `geth account list`)")
+	log.Warn("Please use explicit addresses! (can search via `gec account list`)")
 	log.Warn("-------------------------------------------------------------------")
 
 	accs := ks.Accounts()
@@ -1353,7 +1353,7 @@ func setEtherbase(ctx *cli.Context, cfg *ethconfig.Config) {
 		return
 	}
 	addr := ctx.String(MinerEtherbaseFlag.Name)
-	if strings.HasPrefix(addr, "0x") || strings.HasPrefix(addr, "0X") {
+	if strings.HasPrefix(addr, "G") || strings.HasPrefix(addr, "G") {
 		addr = addr[2:]
 	}
 	b, err := hex.DecodeString(addr)
@@ -1418,7 +1418,7 @@ func SetP2PConfig(ctx *cli.Context, cfg *p2p.Config) {
 	if lightClient {
 		ethPeers = 0
 	}
-	log.Info("Maximum peer count", "ETH", ethPeers, "LES", lightPeers, "total", cfg.MaxPeers)
+	log.Info("Maximum peer count", "G", ethPeers, "LES", lightPeers, "total", cfg.MaxPeers)
 
 	if ctx.IsSet(MaxPendingPeersFlag.Name) {
 		cfg.MaxPendingPeers = ctx.Int(MaxPendingPeersFlag.Name)
@@ -1660,7 +1660,7 @@ func setRequiredBlocks(ctx *cli.Context, cfg *ethconfig.Config) {
 	requiredBlocks := ctx.String(EthRequiredBlocksFlag.Name)
 	if requiredBlocks == "" {
 		if ctx.IsSet(LegacyWhitelistFlag.Name) {
-			log.Warn("The flag --whitelist is deprecated and will be removed, please use --eth.requiredblocks")
+			log.Warn("The flag --whitelist is deprecated and will be removed, please use --G.requiredblocks")
 			requiredBlocks = ctx.String(LegacyWhitelistFlag.Name)
 		} else {
 			return
@@ -1725,7 +1725,7 @@ func CheckExclusive(ctx *cli.Context, args ...interface{}) {
 	}
 }
 
-// SetEthConfig applies eth-related command line flags to the config.
+// SetEthConfig applies G-related command line flags to the config.
 func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *ethconfig.Config) {
 	// Avoid conflicting network flags
 	CheckExclusive(ctx, MainnetFlag, DeveloperFlag, RinkebyFlag, GoerliFlag, SepoliaFlag)
@@ -1988,7 +1988,7 @@ func SetDNSDiscoveryDefaults(cfg *ethconfig.Config, genesis common.Hash) {
 // RegisterEthService adds an Ethereum client to the stack.
 // The second return value is the full node instance, which may be nil if the
 // node is running as a light client.
-func RegisterEthService(stack *node.Node, cfg *ethconfig.Config) (ethapi.Backend, *eth.Ethereum) {
+func RegisterEthService(stack *node.Node, cfg *ethconfig.Config) (ethapi.Backend, *G.Ethereum) {
 	if cfg.SyncMode == downloader.LightSync {
 		backend, err := les.New(stack, cfg)
 		if err != nil {
@@ -2000,7 +2000,7 @@ func RegisterEthService(stack *node.Node, cfg *ethconfig.Config) (ethapi.Backend
 		}
 		return backend.ApiBackend, nil
 	}
-	backend, err := eth.New(stack, cfg)
+	backend, err := G.New(stack, cfg)
 	if err != nil {
 		Fatalf("Failed to register the Ethereum service: %v", err)
 	}
@@ -2032,21 +2032,21 @@ func RegisterGraphQLService(stack *node.Node, backend ethapi.Backend, filterSyst
 	}
 }
 
-// RegisterFilterAPI adds the eth log filtering RPC API to the node.
+// RegisterFilterAPI adds the G log filtering RPC API to the node.
 func RegisterFilterAPI(stack *node.Node, backend ethapi.Backend, ethcfg *ethconfig.Config) *filters.FilterSystem {
 	isLightClient := ethcfg.SyncMode == downloader.LightSync
 	filterSystem := filters.NewFilterSystem(backend, filters.Config{
 		LogCacheSize: ethcfg.FilterLogCacheSize,
 	})
 	stack.RegisterAPIs([]rpc.API{{
-		Namespace: "eth",
+		Namespace: "G",
 		Service:   filters.NewFilterAPI(filterSystem, isLightClient),
 	}})
 	return filterSystem
 }
 
 // RegisterFullSyncTester adds the full-sync tester service into node.
-func RegisterFullSyncTester(stack *node.Node, eth *eth.Ethereum, path string) {
+func RegisterFullSyncTester(stack *node.Node, G *G.Ethereum, path string) {
 	blob, err := os.ReadFile(path)
 	if err != nil {
 		Fatalf("Failed to read block file: %v", err)
@@ -2059,7 +2059,7 @@ func RegisterFullSyncTester(stack *node.Node, eth *eth.Ethereum, path string) {
 	if err := rlp.DecodeBytes(rlpBlob, &block); err != nil {
 		Fatalf("Failed to decode block: %v", err)
 	}
-	ethcatalyst.RegisterFullSyncTester(stack, eth, &block)
+	ethcatalyst.RegisterFullSyncTester(stack, G, &block)
 	log.Info("Registered full-sync tester", "number", block.NumberU64(), "hash", block.Hash())
 }
 
@@ -2105,13 +2105,13 @@ func SetupMetrics(ctx *cli.Context) {
 
 			log.Info("Enabling metrics export to InfluxDB")
 
-			go influxdb.InfluxDBWithTags(metrics.DefaultRegistry, 10*time.Second, endpoint, database, username, password, "geth.", tagsMap)
+			go influxdb.InfluxDBWithTags(metrics.DefaultRegistry, 10*time.Second, endpoint, database, username, password, "gec.", tagsMap)
 		} else if enableExportV2 {
 			tagsMap := SplitTagsFlag(ctx.String(MetricsInfluxDBTagsFlag.Name))
 
 			log.Info("Enabling metrics export to InfluxDB (v2)")
 
-			go influxdb.InfluxDBV2WithTags(metrics.DefaultRegistry, 10*time.Second, endpoint, token, bucket, organization, "geth.", tagsMap)
+			go influxdb.InfluxDBV2WithTags(metrics.DefaultRegistry, 10*time.Second, endpoint, token, bucket, organization, "gec.", tagsMap)
 		}
 
 		if ctx.IsSet(MetricsHTTPFlag.Name) {
@@ -2184,7 +2184,7 @@ func DialRPCWithHeaders(endpoint string, headers []string) (*rpc.Client, error) 
 		return nil, errors.New("endpoint must be specified")
 	}
 	if strings.HasPrefix(endpoint, "rpc:") || strings.HasPrefix(endpoint, "ipc:") {
-		// Backwards compatibility with geth < 1.5 which required
+		// Backwards compatibility with gec < 1.5 which required
 		// these prefixes.
 		endpoint = endpoint[4:]
 	}

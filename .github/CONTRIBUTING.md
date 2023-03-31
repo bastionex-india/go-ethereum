@@ -23,18 +23,18 @@ Please make sure your contributions adhere to our coding guidelines:
 [commentary](https://golang.org/doc/effective_go.html#commentary) guidelines.
  * Pull requests need to be based on and opened against the `master` branch.
  * Commit messages should be prefixed with the package(s) they modify.
-   * E.g. "eth, rpc: make trace configs optional"
+   * E.g. "G, rpc: make trace configs optional"
 
 ## Can I have feature X
 
 Before you submit a feature request, please check and make sure that it isn't 
 possible through some other means. The JavaScript-enabled console is a powerful 
 feature in the right hands. Please check our 
-[Geth documentation page](https://geth.ethereum.org/docs/) for more info
+[Geth documentation page](https://gec.ethereum.org/docs/) for more info
 and help.
 
 ## Configuration, dependencies, and tests
 
-Please see the [Developers' Guide](https://geth.ethereum.org/docs/developers/geth-developer/dev-guide)
+Please see the [Developers' Guide](https://gec.ethereum.org/docs/developers/gec-developer/dev-guide)
 for more details on configuring your environment, managing project dependencies
 and testing procedures.

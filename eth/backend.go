@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package eth implements the Ethereum protocol.
-package eth
+// Package G implements the Ethereum protocol.
+package G
 
 import (
 	"errors"
@@ -58,7 +58,7 @@ import (
 	"github.com/ethereum/go-ethereum/rpc"
 )
 
-// Config contains the configuration options of the ETH protocol.
+// Config contains the configuration options of the G protocol.
 // Deprecated: use ethconfig.Config instead.
 type Config = ethconfig.Config
 
@@ -106,7 +106,7 @@ type Ethereum struct {
 func New(stack *node.Node, config *ethconfig.Config) (*Ethereum, error) {
 	// Ensure configuration values are compatible and sane
 	if config.SyncMode == downloader.LightSync {
-		return nil, errors.New("can't run eth.Ethereum in light sync mode, use les.LightEthereum")
+		return nil, errors.New("can't run G.Ethereum in light sync mode, use les.LightEthereum")
 	}
 	if !config.SyncMode.IsValid() {
 		return nil, fmt.Errorf("invalid sync mode %d", config.SyncMode)
@@ -127,7 +127,7 @@ func New(stack *node.Node, config *ethconfig.Config) (*Ethereum, error) {
 	log.Info("Allocated trie memory caches", "clean", common.StorageSize(config.TrieCleanCache)*1024*1024, "dirty", common.StorageSize(config.TrieDirtyCache)*1024*1024)
 
 	// Assemble the Ethereum object
-	chainDb, err := stack.OpenDatabaseWithFreezer("chaindata", config.DatabaseCache, config.DatabaseHandles, config.DatabaseFreezer, "eth/db/chaindata/", false)
+	chainDb, err := stack.OpenDatabaseWithFreezer("chaindata", config.DatabaseCache, config.DatabaseHandles, config.DatabaseFreezer, "G/db/chaindata/", false)
 	if err != nil {
 		return nil, err
 	}
@@ -143,7 +143,7 @@ func New(stack *node.Node, config *ethconfig.Config) (*Ethereum, error) {
 	}
 	engine := ethconfig.CreateConsensusEngine(stack, &ethashConfig, cliqueConfig, config.Miner.Notify, config.Miner.Noverify, chainDb)
 
-	eth := &Ethereum{
+	G := &Ethereum{
 		config:            config,
 		merger:            consensus.NewMerger(chainDb),
 		chainDb:           chainDb,
@@ -198,74 +198,74 @@ func New(stack *node.Node, config *ethconfig.Config) (*Ethereum, error) {
 	if config.OverrideShanghai != nil {
 		overrides.OverrideShanghai = config.OverrideShanghai
 	}
-	eth.blockchain, err = core.NewBlockChain(chainDb, cacheConfig, config.Genesis, &overrides, eth.engine, vmConfig, eth.shouldPreserve, &config.TxLookupLimit)
+	G.blockchain, err = core.NewBlockChain(chainDb, cacheConfig, config.Genesis, &overrides, G.engine, vmConfig, G.shouldPreserve, &config.TxLookupLimit)
 	if err != nil {
 		return nil, err
 	}
-	eth.bloomIndexer.Start(eth.blockchain)
+	G.bloomIndexer.Start(G.blockchain)
 
 	if config.TxPool.Journal != "" {
 		config.TxPool.Journal = stack.ResolvePath(config.TxPool.Journal)
 	}
-	eth.txPool = txpool.NewTxPool(config.TxPool, eth.blockchain.Config(), eth.blockchain)
+	G.txPool = txpool.NewTxPool(config.TxPool, G.blockchain.Config(), G.blockchain)
 
 	// Permit the downloader to use the trie cache allowance during fast sync
 	cacheLimit := cacheConfig.TrieCleanLimit + cacheConfig.TrieDirtyLimit + cacheConfig.SnapshotLimit
 	checkpoint := config.Checkpoint
 	if checkpoint == nil {
-		checkpoint = params.TrustedCheckpoints[eth.blockchain.Genesis().Hash()]
+		checkpoint = params.TrustedCheckpoints[G.blockchain.Genesis().Hash()]
 	}
-	if eth.handler, err = newHandler(&handlerConfig{
+	if G.handler, err = newHandler(&handlerConfig{
 		Database:       chainDb,
-		Chain:          eth.blockchain,
-		TxPool:         eth.txPool,
-		Merger:         eth.merger,
+		Chain:          G.blockchain,
+		TxPool:         G.txPool,
+		Merger:         G.merger,
 		Network:        config.NetworkId,
 		Sync:           config.SyncMode,
 		BloomCache:     uint64(cacheLimit),
-		EventMux:       eth.eventMux,
+		EventMux:       G.eventMux,
 		Checkpoint:     checkpoint,
 		RequiredBlocks: config.RequiredBlocks,
 	}); err != nil {
 		return nil, err
 	}
 
-	eth.miner = miner.New(eth, &config.Miner, eth.blockchain.Config(), eth.EventMux(), eth.engine, eth.isLocalBlock)
-	eth.miner.SetExtra(makeExtraData(config.Miner.ExtraData))
+	G.miner = miner.New(G, &config.Miner, G.blockchain.Config(), G.EventMux(), G.engine, G.isLocalBlock)
+	G.miner.SetExtra(makeExtraData(config.Miner.ExtraData))
 
-	eth.APIBackend = &EthAPIBackend{stack.Config().ExtRPCEnabled(), stack.Config().AllowUnprotectedTxs, eth, nil}
-	if eth.APIBackend.allowUnprotectedTxs {
+	G.APIBackend = &EthAPIBackend{stack.Config().ExtRPCEnabled(), stack.Config().AllowUnprotectedTxs, G, nil}
+	if G.APIBackend.allowUnprotectedTxs {
 		log.Info("Unprotected transactions allowed")
 	}
 	gpoParams := config.GPO
 	if gpoParams.Default == nil {
 		gpoParams.Default = config.Miner.GasPrice
 	}
-	eth.APIBackend.gpo = gasprice.NewOracle(eth.APIBackend, gpoParams)
+	G.APIBackend.gpo = gasprice.NewOracle(G.APIBackend, gpoParams)
 
 	// Setup DNS discovery iterators.
 	dnsclient := dnsdisc.NewClient(dnsdisc.Config{})
-	eth.ethDialCandidates, err = dnsclient.NewIterator(eth.config.EthDiscoveryURLs...)
+	G.ethDialCandidates, err = dnsclient.NewIterator(G.config.EthDiscoveryURLs...)
 	if err != nil {
 		return nil, err
 	}
-	eth.snapDialCandidates, err = dnsclient.NewIterator(eth.config.SnapDiscoveryURLs...)
+	G.snapDialCandidates, err = dnsclient.NewIterator(G.config.SnapDiscoveryURLs...)
 	if err != nil {
 		return nil, err
 	}
 
 	// Start the RPC service
-	eth.netRPCService = ethapi.NewNetAPI(eth.p2pServer, config.NetworkId)
+	G.netRPCService = ethapi.NewNetAPI(G.p2pServer, config.NetworkId)
 
 	// Register the backend on the node
-	stack.RegisterAPIs(eth.APIs())
-	stack.RegisterProtocols(eth.Protocols())
-	stack.RegisterLifecycle(eth)
+	stack.RegisterAPIs(G.APIs())
+	stack.RegisterProtocols(G.Protocols())
+	stack.RegisterLifecycle(G)
 
 	// Successful startup; push a marker and check previous unclean shutdowns.
-	eth.shutdownTracker.MarkStartup()
+	G.shutdownTracker.MarkStartup()
 
-	return eth, nil
+	return G, nil
 }
 
 func makeExtraData(extra []byte) []byte {
@@ -273,7 +273,7 @@ func makeExtraData(extra []byte) []byte {
 		// create default extradata
 		extra, _ = rlp.EncodeToBytes([]interface{}{
 			uint(params.VersionMajor<<16 | params.VersionMinor<<8 | params.VersionPatch),
-			"geth",
+			"gec",
 			runtime.Version(),
 			runtime.GOOS,
 		})
@@ -296,13 +296,13 @@ func (s *Ethereum) APIs() []rpc.API {
 	// Append all the local APIs and return
 	return append(apis, []rpc.API{
 		{
-			Namespace: "eth",
+			Namespace: "G",
 			Service:   NewEthereumAPI(s),
 		}, {
 			Namespace: "miner",
 			Service:   NewMinerAPI(s),
 		}, {
-			Namespace: "eth",
+			Namespace: "G",
 			Service:   downloader.NewDownloaderAPI(s.handler.downloader, s.eventMux),
 		}, {
 			Namespace: "admin",
@@ -487,7 +487,7 @@ func (s *Ethereum) SyncMode() downloader.SyncMode {
 // Protocols returns all the currently configured
 // network protocols to start.
 func (s *Ethereum) Protocols() []p2p.Protocol {
-	protos := eth.MakeProtocols((*ethHandler)(s.handler), s.networkID, s.ethDialCandidates)
+	protos := G.MakeProtocols((*ethHandler)(s.handler), s.networkID, s.ethDialCandidates)
 	if s.config.SnapshotCache > 0 {
 		protos = append(protos, snap.MakeProtocols((*snapHandler)(s.handler), s.snapDialCandidates)...)
 	}
@@ -497,7 +497,7 @@ func (s *Ethereum) Protocols() []p2p.Protocol {
 // Start implements node.Lifecycle, starting all internal goroutines needed by the
 // Ethereum protocol implementation.
 func (s *Ethereum) Start() error {
-	eth.StartENRUpdater(s.blockchain, s.p2pServer.LocalNode())
+	G.StartENRUpdater(s.blockchain, s.p2pServer.LocalNode())
 
 	// Start the bloom bits servicing goroutines
 	s.startBloomHandlers(params.BloomBitsBlocks)
